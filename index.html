@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>家計簿</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0f172a;color:#e2e8f0;font-family:'Hiragino Sans','Noto Sans JP',sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#1e293b,#0f172a);border-bottom:1px solid #1e293b;padding:14px 16px}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.logo{font-size:22px;font-weight:800;background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.save-badge{font-size:11px;color:#64748b;display:flex;align-items:center;gap:5px}
+.dot{width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block}
+.months{display:flex;gap:4px;flex-wrap:wrap}
+.month-btn{padding:3px 8px;border-radius:20px;font-size:11px;border:none;cursor:pointer;background:#1e293b;color:#64748b;font-weight:400}
+.month-btn.active{background:linear-gradient(135deg,#38bdf8,#818cf8);color:#fff;font-weight:700}
+.nav{display:flex;border-bottom:1px solid #1e293b}
+.nav-btn{flex:1;padding:12px 0;border:none;cursor:pointer;font-size:12px;background:transparent;color:#64748b;border-bottom:2px solid transparent;font-weight:400}
+.nav-btn.active{background:#1e293b;color:#38bdf8;border-bottom:2px solid #38bdf8;font-weight:700}
+.content{padding:16px;max-width:800px;margin:0 auto}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.card{border-radius:14px;padding:14px 12px;text-align:center}
+.card-label{font-size:11px;color:#64748b;margin-bottom:4px}
+.card-value{font-size:16px;font-weight:800}
+.balance-card{border-radius:16px;padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.balance-label{font-size:13px;font-weight:700;color:#94a3b8}
+.balance-sub{font-size:10px;color:#475569;margin-top:2px}
+.balance-value{font-size:22px;font-weight:900}
+.chart-row{display:flex;gap:10px;margin-bottom:12px}
+.chart-box{background:#1e293b;border-radius:16px;padding:16px;border:1px solid #334155;flex:1;min-width:0}
+.chart-title{font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:8px}
+.bar-box{background:#1e293b;border-radius:16px;padding:16px;border:1px solid #334155;margin-bottom:12px}
+.legend{display:flex;gap:12px;justify-content:center;margin-top:6px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:#64748b}
+.legend-dot{width:8px;height:8px;border-radius:2px}
+.form-box{background:#1e293b;border-radius:20px;padding:22px;border:1px solid #334155}
+.form-title{font-size:15px;font-weight:700;margin-bottom:16px}
+.type-toggle{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;background:#0f172a;border-radius:12px;padding:4px;margin-bottom:14px;gap:3px}
+.type-btn{padding:8px 0;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:700;background:transparent;color:#64748b}
+.field{margin-bottom:12px}
+.field label{font-size:11px;color:#64748b;display:block;margin-bottom:4px}
+.field input,.field select{width:100%;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px 12px;color:#e2e8f0;font-size:14px}
+.add-btn{width:100%;margin-top:6px;padding:13px 0;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#38bdf8,#818cf8);color:#fff;font-size:15px;font-weight:700}
+.add-btn.saved{background:#4ade80;color:#0f172a}
+.list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.list-count{font-size:12px;color:#64748b}
+.tx-item{background:#1e293b;border-radius:14px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;border:1px solid #334155;margin-bottom:8px}
+.tx-left{display:flex;align-items:center;gap:10px}
+.tx-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.tx-name{font-size:13px;font-weight:600;color:#e2e8f0}
+.tx-meta{font-size:10px;color:#64748b;margin-top:2px}
+.tx-right{display:flex;align-items:center;gap:10px}
+.tx-amount{font-size:14px;font-weight:700}
+.del-btn{background:none;border:none;cursor:pointer;color:#475569;font-size:16px;padding:4px}
+.empty{text-align:center;color:#334155;padding:40px;background:#1e293b;border-radius:16px}
+.empty-icon{font-size:28px;margin-bottom:8px}
+.pie-legend{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.pie-legend-item{display:flex;align-items:center;justify-content:space-between}
+.pie-legend-left{display:flex;align-items:center;gap:4px}
+.pie-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">家計簿</div>
+    <div class="save-badge"><span class="dot"></span>端末に自動保存中</div>
+  </div>
+  <div class="months" id="months"></div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showTab('dashboard')">📊 ダッシュボード</button>
+  <button class="nav-btn" onclick="showTab('add')">➕ 入力</button>
+  <button class="nav-btn" onclick="showTab('list')">📋 一覧</button>
+</div>
+
+<div class="content">
+  <!-- DASHBOARD -->
+  <div id="tab-dashboard">
+    <div class="grid2">
+      <div class="card" id="card-income"></div>
+      <div class="card" id="card-expense"></div>
+      <div class="card" id="card-repayment"></div>
+      <div class="card" id="card-investment"></div>
+    </div>
+    <div class="balance-card" id="balance-card">
+      <div>
+        <div class="balance-label">月のあまり</div>
+        <div class="balance-sub">収入 − 支出 − 返済 − 投資</div>
+      </div>
+      <div class="balance-value" id="balance-value"></div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-box">
+        <div class="chart-title">支出内訳</div>
+        <canvas id="expensePie" width="120" height="120"></canvas>
+        <div class="pie-legend" id="expenseLegend"></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">投資内訳</div>
+        <canvas id="investPie" width="120" height="120"></canvas>
+        <div class="pie-legend" id="investLegend"></div>
+      </div>
+    </div>
+    <div class="bar-box">
+      <div class="chart-title">月別推移</div>
+      <canvas id="barChart" height="160"></canvas>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#4ade80"></div>収入</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f87171"></div>支出</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#38bdf8"></div>投資</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div>返済</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD -->
+
+  <div id="tab-add" class="hidden">
+    <div class="form-box">
+      <div class="form-title">取引を追加</div>
+      <div class="type-toggle">
+        <button class="type-btn" id="btn-income" onclick="setType('income')">収入</button>
+        <button class="type-btn" id="btn-repayment" onclick="setType('repayment')">返済</button>
+        <button class="type-btn" id="btn-investment" onclick="setType('investment')">投資</button>
+        <button class="type-btn" id="btn-expense" onclick="setType('expense')">支出</button>
+      </div>
+      <div class="field">
+        <label>日付</label>
+        <input type="date" id="form-date">
+      </div>
+      <div class="field">
+        <label>カテゴリ</label>
+        <select id="form-category"></select>
+      </div>
+      <div class="field">
+        <label>金額（円）</label>
+        <input type="number" id="form-amount" placeholder="0">
+      </div>
+      <div class="field">
+        <label>メモ</label>
+        <input type="text" id="form-note" placeholder="例：スーパー、給与など">
+      </div>
+      <button class="add-btn" id="add-btn" onclick="addTransaction()">追加する</button>
+    </div>
+  </div>
+
+  <!-- LIST -->
+
+  <div id="tab-list" class="hidden">
+    <div class="list-header">
+      <div class="list-count" id="list-count"></div>
+    </div>
+    <div id="tx-list"></div>
+  </div>
+</div>
+
+<script>
+const CATS = {
+  income: [{id:'salary',label:'給与',color:'#4ade80'},{id:'side',label:'副業',color:'#34d399'},{id:'other_in',label:'その他収入',color:'#6ee7b7'}],
+  repayment: [{id:'loan',label:'ローン返済',color:'#fb923c'},{id:'card',label:'カード返済',color:'#fdba74'},{id:'other_re',label:'その他返済',color:'#fed7aa'}],
+  investment: [{id:'nisa',label:'NISA',color:'#38bdf8'},{id:'ideco',label:'iDeCo',color:'#818cf8'},{id:'wealthnavi',label:'ウェルスナビ',color:'#c084fc'},{id:'igrow',label:'iGrow',color:'#e879f9'},{id:'other_inv',label:'その他投資',color:'#a5b4fc'}],
+  expense: [{id:'food',label:'食費',color:'#f87171'},{id:'transport',label:'交通費',color:'#fbbf24'},{id:'medical',label:'病院代',color:'#f472b6'},{id:'beauty',label:'美容',color:'#e879f9'},{id:'fun',label:'遊び',color:'#60a5fa'},{id:'other_ex',label:'その他',color:'#94a3b8'}]
+};
+const TYPE_META = {
+  income:{label:'収入',color:'#4ade80',bg:'rgba(74,222,128,0.08)'},
+  repayment:{label:'返済',color:'#fb923c',bg:'rgba(251,146,60,0.08)'},
+  investment:{label:'投資',color:'#38bdf8',bg:'rgba(56,189,248,0.08)'},
+  expense:{label:'支出',color:'#f87171',bg:'rgba(248,113,113,0.08)'}
+};
+const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+const STORAGE_KEY = 'kakeibo_v2';
+const ALL_CATS = Object.values(CATS).flat();
+
+let transactions = [];
+let filterMonth = new Date().getMonth();
+let filterYear = new Date().getFullYear();
+let currentType = 'expense';
+let expPieChart, invPieChart, barChartObj;
+
+function fmt(n){return n.toLocaleString('ja-JP')+'円';}
+function getCat(id){return ALL_CATS.find(c=>c.id===id)||{label:id,color:'#94a3b8'};}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(transactions));}
+function load(){try{const d=localStorage.getItem(STORAGE_KEY);if(d)transactions=JSON.parse(d);}catch(e){}}
+
+function filtered(){
+  return transactions.filter(t=>{
+    const d=new Date(t.date);
+    return d.getMonth()===filterMonth&&d.getFullYear()===filterYear;
+  });
+}
+
+// Months
+function renderMonths(){
+  const el=document.getElementById('months');
+  el.innerHTML=MONTHS.map((m,i)=>`<button class="month-btn${i===filterMonth?' active':''}" onclick="selectMonth(${i})">${m}</button>`).join('');
+}
+function selectMonth(i){filterMonth=i;renderMonths();render();}
+
+// Tabs
+function showTab(tab){
+  ['dashboard','add','list'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('hidden',t!==tab);
+    document.querySelectorAll('.nav-btn')[['dashboard','add','list'].indexOf(t)].classList.toggle('active',t===tab);
+  });
+  if(tab==='dashboard')render();
+  if(tab==='list')renderList();
+}
+
+// Type
+function setType(type){
+  currentType=type;
+  Object.keys(TYPE_META).forEach(t=>{
+    const btn=document.getElementById('btn-'+t);
+    btn.style.background=t===type?TYPE_META[t].color:'transparent';
+    btn.style.color=t===type?'#0f172a':'#64748b';
+  });
+  renderCatSelect();
+}
+function renderCatSelect(){
+  const sel=document.getElementById('form-category');
+  sel.innerHTML=CATS[currentType].map(c=>`<option value="${c.id}">${c.label}</option>`).join('');
+}
+
+// Add
+function addTransaction(){
+  const date=document.getElementById('form-date').value;
+  const category=document.getElementById('form-category').value;
+  const amount=Number(document.getElementById('form-amount').value);
+  const note=document.getElementById('form-note').value;
+  if(!date||!amount||amount<=0)return;
+  transactions.push({id:Date.now().toString(),date,type:currentType,category,amount,note});
+  save();
+  document.getElementById('form-amount').value='';
+  document.getElementById('form-note').value='';
+  const btn=document.getElementById('add-btn');
+  btn.textContent='✓ 保存しました！';btn.classList.add('saved');
+  setTimeout(()=>{btn.textContent='追加する';btn.classList.remove('saved');},2000);
+}
+
+// Delete
+function deleteTransaction(id){
+  transactions=transactions.filter(t=>t.id!==id);
+  save();renderList();render();
+}
+
+// Render dashboard
+function render(){
+  const f=filtered();
+  const inc=f.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+  const exp=f.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+  const rep=f.filter(t=>t.type==='repayment').reduce((s,t)=>s+t.amount,0);
+  const inv=f.filter(t=>t.type==='investment').reduce((s,t)=>s+t.amount,0);
+  const bal=inc-exp-rep-inv;
+
+  const cards=[
+    {id:'card-income',label:'収入',value:inc,color:'#4ade80',bg:'rgba(74,222,128,0.08)'},
+    {id:'card-expense',label:'支出',value:exp,color:'#f87171',bg:'rgba(248,113,113,0.08)'},
+    {id:'card-repayment',label:'返済',value:rep,color:'#fb923c',bg:'rgba(251,146,60,0.08)'},
+    {id:'card-investment',label:'投資',value:inv,color:'#38bdf8',bg:'rgba(56,189,248,0.08)'},
+  ];
+  cards.forEach(c=>{
+    const el=document.getElementById(c.id);
+    el.style.background=c.bg;el.style.border=`1px solid ${c.color}33`;
+    el.innerHTML=`<div class="card-label">${c.label}</div><div class="card-value" style="color:${c.color}">${fmt(c.value)}</div>`;
+  });
+
+  const balCard=document.getElementById('balance-card');
+  const balVal=document.getElementById('balance-value');
+  const bc=bal>=0?'#38bdf8':'#f87171';
+  balCard.style.background=bal>=0?'rgba(56,189,248,0.08)':'rgba(248,113,113,0.08)';
+  balCard.style.border=`1px solid ${bc}44`;
+  balVal.style.color=bc;
+  balVal.textContent=(bal>=0?'+':'')+fmt(bal);
+
+  // Pie charts
+  renderPie('expensePie','expenseLegend',f,'expense');
+  renderPie('investPie','investLegend',f,'investment');
+  renderBar();
+}
+
+function renderPie(canvasId,legendId,f,type){
+  const map={};
+  f.filter(t=>t.type===type).forEach(t=>{map[t.category]=(map[t.category]||0)+t.amount;});
+  const entries=Object.entries(map);
+  const canvas=document.getElementById(canvasId);
+  if(entries.length===0){canvas.style.display='none';document.getElementById(legendId).innerHTML='<div style="color:#334155;font-size:11px;text-align:center;padding:10px">データなし</div>';return;}
+  canvas.style.display='block';
+  const labels=entries.map(([id])=>getCat(id).label);
+  const data=entries.map(([,v])=>v);
+  const colors=entries.map(([id])=>getCat(id).color);
+  if(type==='expense'&&expPieChart)expPieChart.destroy();
+  if(type==='investment'&&invPieChart)invPieChart.destroy();
+  const chart=new Chart(canvas,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:0}]},options:{plugins:{legend:{display:false}},cutout:'60%'}});
+  if(type==='expense')expPieChart=chart; else invPieChart=chart;
+  document.getElementById(legendId).innerHTML=entries.map(([id,v])=>`
+    <div class="pie-legend-item">
+      <div class="pie-legend-left"><div class="pie-dot" style="background:${getCat(id).color}"></div><span style="font-size:10px;color:#94a3b8">${getCat(id).label}</span></div>
+      <span style="font-size:10px;font-weight:600;color:#e2e8f0">${fmt(v)}</span>
+    </div>`).join('');
+}
+
+function renderBar(){
+  const labels=MONTHS;
+  const incData=MONTHS.map((_,i)=>transactions.filter(t=>new Date(t.date).getMonth()===i&&new Date(t.date).getFullYear()===filterYear&&t.type==='income').reduce((s,t)=>s+t.amount,0));
+  const expData=MONTHS.map((_,i)=>transactions.filter(t=>new Date(t.date).getMonth()===i&&new Date(t.date).getFullYear()===filterYear&&t.type==='expense').reduce((s,t)=>s+t.amount,0));
+  const invData=MONTHS.map((_,i)=>transactions.filter(t=>new Date(t.date).getMonth()===i&&new Date(t.date).getFullYear()===filterYear&&t.type==='investment').reduce((s,t)=>s+t.amount,0));
+  const repData=MONTHS.map((_,i)=>transactions.filter(t=>new Date(t.date).getMonth()===i&&new Date(t.date).getFullYear()===filterYear&&t.type==='repayment').reduce((s,t)=>s+t.amount,0));
+  if(barChartObj)barChartObj.destroy();
+  barChartObj=new Chart(document.getElementById('barChart'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'収入',data:incData,backgroundColor:'#4ade80',borderRadius:3},
+      {label:'支出',data:expData,backgroundColor:'#f87171',borderRadius:3},
+      {label:'投資',data:invData,backgroundColor:'#38bdf8',borderRadius:3},
+      {label:'返済',data:repData,backgroundColor:'#fb923c',borderRadius:3},
+    ]},
+    options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:9},callback:v=>v>=10000?`${v/10000}万`:v},grid:{color:'#1e293b'}}}}
+  });
+}
+
+// Render list
+function renderList(){
+  const f=filtered().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  document.getElementById('list-count').textContent=`${MONTHS[filterMonth]}の取引 ${f.length}件`;
+  if(f.length===0){
+    document.getElementById('tx-list').innerHTML='<div class="empty"><div class="empty-icon">📭</div>取引がありません</div>';
+    return;
+  }
+  document.getElementById('tx-list').innerHTML=f.map(t=>{
+    const cat=getCat(t.category);
+    const meta=TYPE_META[t.type];
+    return `<div class="tx-item">
+      <div class="tx-left">
+        <div class="tx-dot" style="background:${cat.color}"></div>
+        <div>
+          <div class="tx-name">${t.note||cat.label}</div>
+          <div class="tx-meta">${t.date} · <span style="color:${meta.color}">${meta.label}</span> · ${cat.label}</div>
+        </div>
+      </div>
+      <div class="tx-right">
+        <div class="tx-amount" style="color:${t.type==='income'?'#4ade80':meta.color}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</div>
+        <button class="del-btn" onclick="deleteTransaction('${t.id}')">×</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Init
+load();
+renderMonths();
+setType('expense');
+document.getElementById('form-date').value=new Date().toISOString().slice(0,10);
+render();
+</script>
+
+</body>
+</html>
