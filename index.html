@@ -182,12 +182,24 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 .port-add-btn{width:100%;padding:11px 0;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;font-size:13px;font-weight:700}
 .port-hint{background:#faf7ff;border-radius:12px;padding:12px;border:1.5px solid #e9d5ff;font-size:11px;color:#9ca3af;line-height:1.8;margin-bottom:12px}
 
+/* エクスポート・インポート */
+.io-box{background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);margin-bottom:12px}
+.io-title{font-size:14px;font-weight:800;color:#3d2c6b;margin-bottom:14px}
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.io-btn{padding:13px 0;border-radius:14px;border:none;cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
+.io-btn.export{background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;box-shadow:0 4px 12px rgba(192,132,252,0.4)}
+.io-btn.import{background:#f3f0ff;color:#7c3aed;border:1.5px solid #e9d5ff}
+.io-hint{font-size:10px;color:#9ca3af;background:#faf7ff;border-radius:10px;padding:10px;line-height:1.7}
+.io-drop-zone{border:2px dashed #e9d5ff;border-radius:14px;padding:20px;text-align:center;font-size:12px;color:#9ca3af;cursor:pointer;transition:all 0.2s;margin-top:10px}
+.io-drop-zone:hover,.io-drop-zone.drag-over{border-color:#c084fc;background:#faf5ff;color:#7c3aed}
+.io-file-input{display:none}
+
 /* トースト */
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;pointer-events:none;transition:opacity 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
 
 /* 下部ナビ */
 .nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #f3f0ff;z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 16px rgba(0,0,0,0.06)}
-.nav-btn{flex:1;padding:10px 4px 8px;border:none;cursor:pointer;background:transparent;color:#c4b5fd;border-top:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.nav-btn{flex:1;padding:10px 4px 8pt;border:none;cursor:pointer;background:transparent;color:#c4b5fd;border-top:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
 .nav-btn .nav-icon{font-size:20px;line-height:1}
 .nav-btn .nav-label{font-size:9px;font-weight:600;line-height:1;color:#c4b5fd}
 .nav-btn.active .nav-label{color:#7c3aed}
@@ -227,7 +239,6 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
   </div>
 
   <!-- ADD -->
-
   <div id="tab-add" class="hidden">
     <div class="form-box">
       <div class="form-title">✏️ 取引を追加</div>
@@ -260,7 +271,6 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
   </div>
 
   <!-- YEARLY -->
-
   <div id="tab-yearly" class="hidden">
     <div class="year-header">
       <div class="year-title" id="year-title"></div>
@@ -283,7 +293,6 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
   </div>
 
   <!-- PORTFOLIO -->
-
   <div id="tab-portfolio" class="hidden">
     <div class="port-hero">
       <div class="port-hero-top">
@@ -333,7 +342,6 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
   </div>
 
   <!-- CALENDAR -->
-
   <div id="tab-calendar" class="hidden">
     <div class="cal-nav">
       <button class="cal-nb" onclick="calPrev()">＜</button>
@@ -345,15 +353,41 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
   </div>
 
   <!-- LIST -->
-
   <div id="tab-list" class="hidden">
     <div class="list-header"><div class="list-count" id="list-count"></div></div>
     <div id="tx-list"></div>
   </div>
+
+  <!-- EXPORT/IMPORT -->
+  <div id="tab-io" class="hidden">
+    <div class="io-box">
+      <div class="io-title">📤 データをエクスポート</div>
+      <div class="io-grid">
+        <button class="io-btn export" onclick="exportJSON()">📄 JSON形式</button>
+        <button class="io-btn export" onclick="exportCSV()">📊 CSV形式</button>
+      </div>
+      <div class="io-hint">
+        ・JSON：全データ（取引・カテゴリ・投資）を完全に保存<br>
+        ・CSV：取引データをExcelで開ける形式で保存
+      </div>
+    </div>
+    <div class="io-box">
+      <div class="io-title">📥 データをインポート</div>
+      <div class="io-drop-zone" id="drop-zone" onclick="document.getElementById('io-file').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+        📂 クリックまたはファイルをここにドロップ<br>
+        <span style="font-size:10px;margin-top:4px;display:block">JSON / CSV に対応</span>
+      </div>
+      <input type="file" id="io-file" class="io-file-input" accept=".json,.csv" onchange="onFileSelect(event)">
+      <div class="io-hint" style="margin-top:10px">
+        ・JSONインポート：既存データに追加（重複は自動スキップ）<br>
+        ・CSVインポート：取引データのみ追加<br>
+        ・インポート前にJSONでバックアップを取ることを推奨
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- 下部ナビ -->
-
 <nav class="nav">
   <button class="nav-btn add-btn-nav" onclick="showTab('add')">
     <span class="nav-icon">➕</span>
@@ -378,6 +412,10 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
   <button class="nav-btn" onclick="showTab('list')">
     <span class="nav-icon">📋</span>
     <span class="nav-label">一覧</span>
+  </button>
+  <button class="nav-btn" onclick="showTab('io')">
+    <span class="nav-icon">🔄</span>
+    <span class="nav-label">保存</span>
   </button>
 </nav>
 
@@ -424,7 +462,7 @@ function toast(msg,color){
   document.body.appendChild(el);setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.remove(),300);},2000);
 }
 
-const TABS=['add','dashboard','yearly','portfolio','calendar','list'];
+const TABS=['add','dashboard','yearly','portfolio','calendar','list','io'];
 function showTab(tab){
   TABS.forEach((t,i)=>{
     document.getElementById('tab-'+t).classList.toggle('hidden',t!==tab);
@@ -699,7 +737,7 @@ function renderPort(){
   if(usItems.length){
     html+=`<div class="port-section"><div class="port-section-title">🇺🇸 米国株・ETF <span class="port-section-badge" style="background:#d1fae5;color:#059669">自動取得</span></div>${usItems.map(p=>{
       const cost=p.buy*p.qty;const pnl=p.now-cost;const pct2=cost>0?((pnl/cost)*100).toFixed(1):0;const plus=pnl>=0;
-      return `<div class="port-item"><div class="port-item-header"><div class="port-item-left"><div class="port-item-icon" style="background:${p.color}22">${p.color?'📈':'📈'}</div><div><div class="port-item-name">${p.ticker} <span class="port-realtime-badge">自動</span></div><div class="port-item-sub">${p.name} · ${p.account}</div><div class="port-updated">${p.updatedAt}${p.usdPrice?` · $${p.usdPrice.toFixed(2)} × ¥${Math.round(p.usdJpy||155)}`:''}</div></div></div><div class="port-item-right"><div class="port-item-value">¥${Math.round(p.now).toLocaleString()}</div><div class="port-item-pnl ${plus?'plus':'minus'}">${plus?'+':''}${fmt(Math.round(pnl))} (${plus?'+':''}${pct2}%)</div></div></div><div class="port-item-body"><div class="port-num-box"><div class="port-num-label">購入単価</div><div class="port-num-val">¥${Math.round(p.buy).toLocaleString()}</div></div><div class="port-num-box"><div class="port-num-label">保有口数</div><div class="port-num-val">${p.qty}口</div></div><div class="port-num-box"><div class="port-num-label">購入総額</div><div class="port-num-val">¥${Math.round(cost).toLocaleString()}</div></div></div><div class="port-actions"><button class="port-del-btn" onclick="deletePort('${p.id}')">削除</button></div></div>`;
+      return `<div class="port-item"><div class="port-item-header"><div class="port-item-left"><div class="port-item-icon" style="background:${p.color}22">📈</div><div><div class="port-item-name">${p.ticker} <span class="port-realtime-badge">自動</span></div><div class="port-item-sub">${p.name} · ${p.account}</div><div class="port-updated">${p.updatedAt}${p.usdPrice?` · $${p.usdPrice.toFixed(2)} × ¥${Math.round(p.usdJpy||155)}`:''}</div></div></div><div class="port-item-right"><div class="port-item-value">¥${Math.round(p.now).toLocaleString()}</div><div class="port-item-pnl ${plus?'plus':'minus'}">${plus?'+':''}${fmt(Math.round(pnl))} (${plus?'+':''}${pct2}%)</div></div></div><div class="port-item-body"><div class="port-num-box"><div class="port-num-label">購入単価</div><div class="port-num-val">¥${Math.round(p.buy).toLocaleString()}</div></div><div class="port-num-box"><div class="port-num-label">保有口数</div><div class="port-num-val">${p.qty}口</div></div><div class="port-num-box"><div class="port-num-label">購入総額</div><div class="port-num-val">¥${Math.round(cost).toLocaleString()}</div></div></div><div class="port-actions"><button class="port-del-btn" onclick="deletePort('${p.id}')">削除</button></div></div>`;
     }).join('')}</div>`;
   }
   if(fundItems.length){
@@ -781,6 +819,91 @@ function renderList(){
       const ie=document.getElementById(`ie-${editingId}`);if(ie)ie.dataset.type=tx.type;
     }
   }
+}
+
+// EXPORT / IMPORT
+function exportJSON(){
+  const data={version:1,exportedAt:new Date().toISOString(),txs,CATS,ports};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`家計簿_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();URL.revokeObjectURL(a.href);
+  toast('JSONをエクスポートしました','#818cf8');
+}
+function exportCSV(){
+  const rows=[['日付','種別','カテゴリ','金額','メモ']];
+  txs.sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{
+    const cat=getCat(t.category);
+    rows.push([t.date,TM[t.type].label,cat.label,t.amount,t.note||'']);
+  });
+  const bom='\uFEFF';
+  const csv=bom+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`家計簿_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();URL.revokeObjectURL(a.href);
+  toast('CSVをエクスポートしました','#34d399');
+}
+function onDragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('drag-over');}
+function onDragLeave(e){document.getElementById('drop-zone').classList.remove('drag-over');}
+function onDrop(e){
+  e.preventDefault();document.getElementById('drop-zone').classList.remove('drag-over');
+  const file=e.dataTransfer.files[0];if(file)readFile(file);
+}
+function onFileSelect(e){const file=e.target.files[0];if(file)readFile(file);e.target.value='';}
+function readFile(file){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    if(file.name.endsWith('.json'))importJSON(ev.target.result);
+    else if(file.name.endsWith('.csv'))importCSV(ev.target.result);
+    else toast('JSON または CSV ファイルを選択してください','#f43f5e');
+  };
+  reader.readAsText(file,'utf-8');
+}
+function importJSON(text){
+  try{
+    const data=JSON.parse(text);
+    if(!data.txs)throw new Error('invalid');
+    const existIds=new Set(txs.map(t=>t.id));
+    let added=0;
+    data.txs.forEach(t=>{if(!existIds.has(t.id)){txs.push(t);added++;}});
+    if(data.CATS){
+      ['income','investment','expense'].forEach(type=>{
+        if(data.CATS[type]){
+          const existCatIds=new Set(CATS[type].map(c=>c.id));
+          data.CATS[type].forEach(c=>{if(!existCatIds.has(c.id))CATS[type].push(c);});
+        }
+      });
+    }
+    if(data.ports){
+      const existPortIds=new Set(ports.map(p=>p.id));
+      data.ports.forEach(p=>{if(!existPortIds.has(p.id))ports.push(p);});
+    }
+    save();saveCats();savePorts();
+    renderDash();
+    toast(`✓ ${added}件の取引をインポートしました`,'#10b981');
+  }catch(e){toast('JSONの読み込みに失敗しました','#f43f5e');}
+}
+function importCSV(text){
+  try{
+    const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
+    const typeMap={'収入':'income','支出':'expense','投資':'investment'};
+    let added=0;
+    lines.slice(1).forEach(line=>{
+      const cols=line.match(/("(?:[^"]|"")*"|[^,]*)/g).map(v=>v.replace(/^"|"$/g,'').replace(/""/g,'"'));
+      const [date,typeLabel,catLabel,amtStr,note]=cols;
+      const type=typeMap[typeLabel];const amount=Number(amtStr);
+      if(!date||!type||!amount)return;
+      let cat=getAllCats().find(c=>c.label===catLabel);
+      if(!cat){const id='csv_'+Date.now()+'_'+Math.random().toString(36).slice(2);CATS[type].push({id,label:catLabel||'その他',color:'#d1d5db'});cat=CATS[type][CATS[type].length-1];}
+      txs.push({id:Date.now().toString()+'_'+Math.random().toString(36).slice(2),date,type,category:cat.id,amount,note:note||''});
+      added++;
+    });
+    save();saveCats();renderDash();
+    toast(`✓ ${added}件の取引をインポートしました`,'#10b981');
+  }catch(e){toast('CSVの読み込みに失敗しました','#f43f5e');}
 }
 
 // INIT
