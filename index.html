@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -9,30 +8,16 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP',sans-serif;min-height:100vh}
-
-/* ヘッダー */
 .header{background:linear-gradient(135deg,#c084fc,#818cf8);padding:16px 18px 14px;box-shadow:0 2px 12px rgba(192,132,252,0.3)}
 .header-top{display:flex;align-items:center;justify-content:space-between}
 .logo{font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px}
 .save-badge{font-size:11px;color:rgba(255,255,255,0.8);display:flex;align-items:center;gap:5px}
 .sdot{width:6px;height:6px;border-radius:50%;background:#a7f3d0;display:inline-block}
-
-/* コンテンツ */
-.content{padding:16px 16px 90px;max-width:800px;margin:0 auto}
-
-/* カード */
+.content{padding:16px 16px 110px;max-width:800px;margin:0 auto}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .card{border-radius:18px;padding:16px 14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .card-label{font-size:11px;color:#9ca3af;margin-bottom:6px;font-weight:600}
 .card-value{font-size:17px;font-weight:800}
-
-/* バランスカード */
-.balance-card{border-radius:18px;padding:18px 20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
-.balance-label{font-size:13px;font-weight:700}
-.balance-sub{font-size:10px;margin-top:2px;opacity:0.7}
-.balance-value{font-size:24px;font-weight:900}
-
-/* グラフボックス */
 .chart-row{display:flex;gap:10px;margin-bottom:12px}
 .chart-box{background:#fff;border-radius:18px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);flex:1;min-width:0}
 .chart-title{font-size:12px;font-weight:700;color:#7c3aed;margin-bottom:8px}
@@ -40,8 +25,6 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 .legend{display:flex;gap:12px;justify-content:center;margin-top:8px;flex-wrap:wrap}
 .legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:#6b7280}
 .legend-dot{width:8px;height:8px;border-radius:2px}
-
-/* 入力フォーム */
 .form-box{background:#fff;border-radius:20px;padding:22px;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
 .form-title{font-size:16px;font-weight:800;color:#3d2c6b;margin-bottom:16px}
 .type-toggle{display:grid;grid-template-columns:1fr 1fr 1fr;background:#f3f0ff;border-radius:14px;padding:4px;margin-bottom:16px;gap:3px}
@@ -52,8 +35,6 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 .field input:focus,.field select:focus{outline:none;border-color:#c084fc}
 .add-btn{width:100%;margin-top:8px;padding:14px 0;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(192,132,252,0.4)}
 .add-btn.saved{background:linear-gradient(135deg,#6ee7b7,#34d399);box-shadow:0 4px 12px rgba(52,211,153,0.4)}
-
-/* カテゴリ */
 .cat-field{margin-bottom:14px}
 .cat-field label{font-size:11px;color:#9ca3af;display:block;margin-bottom:5px;font-weight:600}
 .cat-select-row{display:flex;gap:8px;align-items:center}
@@ -68,29 +49,12 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 .cat-add-row{display:flex;gap:6px;margin-top:8px}
 .cat-add-input{flex:1;background:#f9f7ff;border:1.5px solid #e9d5ff;border-radius:10px;padding:9px 12px;color:#3d2c6b;font-size:13px}
 .cat-add-submit{background:linear-gradient(135deg,#c084fc,#818cf8);border:none;border-radius:10px;color:#fff;font-size:13px;padding:9px 14px;cursor:pointer;font-weight:700;white-space:nowrap}
-
-/* リスト */
 .empty{text-align:center;color:#d1d5db;padding:40px;background:#fff;border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .pie-legend{display:flex;flex-direction:column;gap:4px;margin-top:6px}
 .pie-legend-item{display:flex;align-items:center;justify-content:space-between}
 .pie-legend-left{display:flex;align-items:center;gap:4px}
 .pie-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .hidden{display:none}
-.list-header{margin-bottom:10px}
-.list-count{font-size:12px;color:#9ca3af;font-weight:600}
-.tx-wrap{margin-bottom:8px}
-.tx-item{background:#fff;border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.tx-item.editing{box-shadow:0 0 0 2px #c084fc}
-.tx-left{display:flex;align-items:center;gap:10px}
-.tx-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.tx-name{font-size:13px;font-weight:600;color:#3d2c6b}
-.tx-meta{font-size:10px;color:#9ca3af;margin-top:2px}
-.tx-right{display:flex;align-items:center;gap:6px}
-.tx-amount{font-size:14px;font-weight:700}
-.tx-edit-btn{background:none;border:none;cursor:pointer;color:#d1d5db;font-size:15px;padding:4px}
-.tx-edit-btn.active{color:#c084fc}
-.tx-del-btn{background:none;border:none;cursor:pointer;color:#fca5a5;font-size:15px;padding:4px}
-
 /* インライン編集 */
 .inline-edit{background:#f9f7ff;border:2px solid #c084fc;border-radius:16px;padding:16px;margin-top:6px}
 .ie-type{display:grid;grid-template-columns:1fr 1fr 1fr;background:#f3f0ff;border-radius:10px;padding:3px;gap:2px;margin-bottom:10px}
@@ -101,11 +65,13 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 .ie-actions{display:flex;gap:8px;margin-top:4px}
 .ie-save{flex:1;padding:10px 0;border-radius:10px;border:none;cursor:pointer;background:linear-gradient(135deg,#6ee7b7,#34d399);color:#065f46;font-size:13px;font-weight:700}
 .ie-cancel{padding:10px 16px;border-radius:10px;border:1.5px solid #e9d5ff;cursor:pointer;background:transparent;color:#9ca3af;font-size:13px}
-
 /* カレンダー */
-.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.cal-nb{background:#fff;border:1.5px solid #e9d5ff;border-radius:10px;padding:7px 16px;color:#7c3aed;cursor:pointer;font-size:14px;font-weight:700}
-.cal-title{font-size:15px;font-weight:800;color:#3d2c6b}
+.cal-year-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cal-year-btn{background:#f9f7ff;border:1.5px solid #e9d5ff;border-radius:12px;padding:8px 20px;color:#3d2c6b;font-size:17px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s}
+.cal-year-btn:hover{background:#f3f0ff;border-color:#c084fc}
+.cal-nb{background:#fff;border:1.5px solid #e9d5ff;border-radius:10px;padding:8px 18px;color:#7c3aed;cursor:pointer;font-size:15px;font-weight:700}
+.cal-month-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-month-title{font-size:16px;font-weight:800;color:#3d2c6b}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .cal-dow{text-align:center;font-size:10px;color:#9ca3af;padding:4px 0;font-weight:700}
 .cal-day{background:#fff;border-radius:10px;padding:4px;min-height:54px;border:1.5px solid #f3f0ff;cursor:pointer}
@@ -119,8 +85,16 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 .cal-detail{background:#fff;border-radius:16px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-top:12px}
 .cal-detail-title{font-size:13px;font-weight:700;color:#7c3aed;margin-bottom:10px}
 .cal-tx{background:#faf7ff;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-
-/* 年間 */
+/* 年間カレンダー（12ヶ月グリッド） */
+.cal-year-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.cal-month-card{background:#fff;border-radius:14px;padding:14px 8px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;border:1.5px solid #f3f0ff;transition:border-color 0.15s}
+.cal-month-card:active{border-color:#c084fc;background:#faf5ff}
+.cal-month-card.cur-month{border-color:#c084fc;background:#faf5ff}
+.cal-month-card-name{font-size:15px;font-weight:800;color:#3d2c6b;margin-bottom:5px}
+.cal-month-card-exp{font-size:10px;color:#f43f5e;font-weight:600}
+.cal-month-card-inc{font-size:10px;color:#10b981;font-weight:600}
+.cal-month-card-empty{font-size:11px;color:#d1d5db}
+/* 年間サマリー */
 .year-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .year-title{font-size:16px;font-weight:800;color:#3d2c6b}
 .year-nav-btn{background:#fff;border:1.5px solid #e9d5ff;border-radius:10px;padding:6px 14px;color:#7c3aed;cursor:pointer;font-size:13px;font-weight:700}
@@ -131,7 +105,6 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 .year-bar-wrap{flex:1;height:6px;background:#f3f0ff;border-radius:3px;margin:0 10px;overflow:hidden}
 .year-bar{height:6px;border-radius:3px}
 .year-month-amt{font-size:11px;font-weight:700;width:80px;text-align:right;flex-shrink:0}
-
 /* ポートフォリオ */
 .port-hero{background:linear-gradient(135deg,#818cf8,#c084fc);border-radius:20px;padding:20px;margin-bottom:12px;box-shadow:0 4px 16px rgba(129,140,248,0.3)}
 .port-hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
@@ -181,33 +154,47 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 .port-add-field input,.port-add-field select{width:100%;background:#f9f7ff;border:1.5px solid #e9d5ff;border-radius:8px;padding:8px 10px;color:#3d2c6b;font-size:13px}
 .port-add-btn{width:100%;padding:11px 0;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;font-size:13px;font-weight:700}
 .port-hint{background:#faf7ff;border-radius:12px;padding:12px;border:1.5px solid #e9d5ff;font-size:11px;color:#9ca3af;line-height:1.8;margin-bottom:12px}
-
+/* メニュー */
+.menu-section-title{font-size:11px;font-weight:700;color:#9ca3af;margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase}
+.menu-list{background:#fff;border-radius:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px}
+.menu-item{width:100%;display:flex;align-items:center;padding:18px 18px;border:none;background:transparent;cursor:pointer;border-bottom:1px solid #f3f0ff;gap:14px;text-align:left;transition:background 0.15s}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{background:#faf7ff}
+.menu-item-icon{font-size:24px;width:38px;text-align:center;flex-shrink:0}
+.menu-item-body{flex:1}
+.menu-item-label{font-size:15px;font-weight:700;color:#3d2c6b}
+.menu-item-desc{font-size:11px;color:#9ca3af;margin-top:2px}
+.menu-item-arrow{font-size:20px;color:#d1d5db;font-weight:400;line-height:1}
 /* エクスポート・インポート */
 .io-box{background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);margin-bottom:12px}
 .io-title{font-size:14px;font-weight:800;color:#3d2c6b;margin-bottom:14px}
 .io-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .io-btn{padding:13px 0;border-radius:14px;border:none;cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
 .io-btn.export{background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;box-shadow:0 4px 12px rgba(192,132,252,0.4)}
-.io-btn.import{background:#f3f0ff;color:#7c3aed;border:1.5px solid #e9d5ff}
 .io-hint{font-size:10px;color:#9ca3af;background:#faf7ff;border-radius:10px;padding:10px;line-height:1.7}
 .io-drop-zone{border:2px dashed #e9d5ff;border-radius:14px;padding:20px;text-align:center;font-size:12px;color:#9ca3af;cursor:pointer;transition:all 0.2s;margin-top:10px}
 .io-drop-zone:hover,.io-drop-zone.drag-over{border-color:#c084fc;background:#faf5ff;color:#7c3aed}
 .io-file-input{display:none}
-
+/* 確認ダイアログ */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200}
+.confirm-box{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:24px;padding:32px 24px 24px;z-index:201;width:min(300px,88vw);text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18)}
+.confirm-icon{font-size:40px;margin-bottom:12px}
+.confirm-msg{font-size:17px;font-weight:800;color:#3d2c6b;margin-bottom:6px}
+.confirm-sub{font-size:12px;color:#9ca3af;margin-bottom:24px}
+.confirm-btns{display:flex;gap:10px}
+.confirm-cancel{flex:1;padding:13px 0;border-radius:14px;border:1.5px solid #e9d5ff;background:transparent;color:#9ca3af;font-size:14px;font-weight:700;cursor:pointer}
+.confirm-ok{flex:1;padding:13px 0;border-radius:14px;border:none;background:linear-gradient(135deg,#f43f5e,#fb7185);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(244,63,94,0.3)}
 /* トースト */
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;pointer-events:none;transition:opacity 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
-
-/* 下部ナビ */
-.nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #f3f0ff;z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 16px rgba(0,0,0,0.06)}
-.nav-btn{flex:1;padding:10px 4px 8pt;border:none;cursor:pointer;background:transparent;color:#c4b5fd;border-top:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
-.nav-btn .nav-icon{font-size:20px;line-height:1}
-.nav-btn .nav-label{font-size:9px;font-weight:600;line-height:1;color:#c4b5fd}
+/* 下部ナビ（4ボタン） */
+.nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #f3f0ff;z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(0,0,0,0.08)}
+.nav-btn{flex:1;padding:14px 8px 13px;border:none;cursor:pointer;background:transparent;color:#c4b5fd;border-top:3px solid transparent;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.nav-btn .nav-icon{font-size:26px;line-height:1}
+.nav-btn .nav-label{font-size:12px;font-weight:700;line-height:1;color:#c4b5fd}
 .nav-btn.active .nav-label{color:#7c3aed}
-.nav-btn.active{border-top:2px solid #7c3aed}
-.nav-btn.add-btn-nav{background:transparent}
-.nav-btn.add-btn-nav .nav-icon{width:42px;height:42px;background:linear-gradient(135deg,#c084fc,#818cf8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 4px 12px rgba(192,132,252,0.5);margin-top:-8px}
+.nav-btn.active{border-top:3px solid #7c3aed}
+.nav-input .nav-icon{background:linear-gradient(135deg,#c084fc,#818cf8);border-radius:50%;width:46px;height:46px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 4px 14px rgba(192,132,252,0.5);margin-top:-8px}
 </style>
-
 </head>
 <body>
 <div class="header">
@@ -267,6 +254,65 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
       <div class="field"><label>金額（円）</label><input type="number" id="form-amount" placeholder="0"></div>
       <div class="field"><label>メモ</label><input type="text" id="form-note" placeholder="例：スーパー、給与など"></div>
       <button class="add-btn" id="add-btn" onclick="addTransaction()">追加する</button>
+    </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div id="tab-calendar" class="hidden">
+    <!-- 年ヘッダー（常時表示・タップで年一覧に切替） -->
+    <div class="cal-year-bar">
+      <button class="cal-nb" id="cal-yr-prev" onclick="calYearNav(-1)" style="visibility:hidden">＜</button>
+      <button class="cal-year-btn" onclick="toggleCalView()">
+        <span id="cal-year-display"></span>年
+        <span id="cal-year-arrow" style="font-size:12px;color:#9ca3af">▼</span>
+      </button>
+      <button class="cal-nb" id="cal-yr-next" onclick="calYearNav(1)" style="visibility:hidden">＞</button>
+    </div>
+    <!-- 月ナビ（月表示時のみ表示） -->
+    <div id="cal-month-bar" class="cal-month-bar">
+      <button class="cal-nb" onclick="calPrev()">＜</button>
+      <div class="cal-month-title" id="cal-title"></div>
+      <button class="cal-nb" onclick="calNext()">＞</button>
+    </div>
+    <!-- 年間カレンダー（12ヶ月グリッド） -->
+    <div id="cal-year-view" class="hidden">
+      <div class="cal-year-overview" id="cal-year-grid"></div>
+    </div>
+    <!-- 月カレンダー -->
+    <div id="cal-month-view">
+      <div class="cal-grid" id="cal-grid"></div>
+      <div id="cal-detail"></div>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <div id="tab-menu" class="hidden">
+    <div class="menu-section-title">メニュー</div>
+    <div class="menu-list">
+      <button class="menu-item" onclick="showTab('yearly')">
+        <span class="menu-item-icon">📊</span>
+        <div class="menu-item-body">
+          <div class="menu-item-label">年間サマリー</div>
+          <div class="menu-item-desc">年間の収支・投資をまとめて確認</div>
+        </div>
+        <span class="menu-item-arrow">›</span>
+      </button>
+      <button class="menu-item" onclick="showTab('portfolio')">
+        <span class="menu-item-icon">💹</span>
+        <div class="menu-item-body">
+          <div class="menu-item-label">投資ポートフォリオ</div>
+          <div class="menu-item-desc">米国株・投資信託・NISAを管理</div>
+        </div>
+        <span class="menu-item-arrow">›</span>
+      </button>
+      <button class="menu-item" onclick="showTab('io')">
+        <span class="menu-item-icon">🔄</span>
+        <div class="menu-item-body">
+          <div class="menu-item-label">保存・バックアップ</div>
+          <div class="menu-item-desc">エクスポート・インポート</div>
+        </div>
+        <span class="menu-item-arrow">›</span>
+      </button>
     </div>
   </div>
 
@@ -341,23 +387,6 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
     <div id="port-list"></div>
   </div>
 
-  <!-- CALENDAR -->
-  <div id="tab-calendar" class="hidden">
-    <div class="cal-nav">
-      <button class="cal-nb" onclick="calPrev()">＜</button>
-      <div class="cal-title" id="cal-title"></div>
-      <button class="cal-nb" onclick="calNext()">＞</button>
-    </div>
-    <div class="cal-grid" id="cal-grid"></div>
-    <div id="cal-detail"></div>
-  </div>
-
-  <!-- LIST -->
-  <div id="tab-list" class="hidden">
-    <div class="list-header"><div class="list-count" id="list-count"></div></div>
-    <div id="tx-list"></div>
-  </div>
-
   <!-- EXPORT/IMPORT -->
   <div id="tab-io" class="hidden">
     <div class="io-box">
@@ -387,35 +416,37 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
   </div>
 </div>
 
-<!-- 下部ナビ -->
+<!-- 削除確認ダイアログ -->
+<div id="confirm-modal" class="hidden">
+  <div class="confirm-overlay" onclick="closeConfirm()"></div>
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-msg">本当に削除しますか？</div>
+    <div class="confirm-sub">この操作は取り消せません</div>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="closeConfirm()">キャンセル</button>
+      <button class="confirm-ok" onclick="doConfirmedDelete()">削除する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 下部ナビ（4ボタン） -->
 <nav class="nav">
-  <button class="nav-btn add-btn-nav" onclick="showTab('add')">
-    <span class="nav-icon">➕</span>
-    <span class="nav-label">入力</span>
-  </button>
   <button class="nav-btn active" onclick="showTab('dashboard')">
     <span class="nav-icon">🏠</span>
     <span class="nav-label">ホーム</span>
   </button>
-  <button class="nav-btn" onclick="showTab('yearly')">
-    <span class="nav-icon">📈</span>
-    <span class="nav-label">年間</span>
-  </button>
-  <button class="nav-btn" onclick="showTab('portfolio')">
-    <span class="nav-icon">💹</span>
-    <span class="nav-label">投資</span>
+  <button class="nav-btn nav-input" onclick="showTab('add')">
+    <span class="nav-icon">✏️</span>
+    <span class="nav-label">入力</span>
   </button>
   <button class="nav-btn" onclick="showTab('calendar')">
-    <span class="nav-icon">🗓</span>
+    <span class="nav-icon">📅</span>
     <span class="nav-label">暦</span>
   </button>
-  <button class="nav-btn" onclick="showTab('list')">
-    <span class="nav-icon">📋</span>
-    <span class="nav-label">一覧</span>
-  </button>
-  <button class="nav-btn" onclick="showTab('io')">
-    <span class="nav-icon">🔄</span>
-    <span class="nav-label">保存</span>
+  <button class="nav-btn" onclick="showTab('menu')">
+    <span class="nav-icon">☰</span>
+    <span class="nav-label">メニュー</span>
   </button>
 </nav>
 
@@ -436,11 +467,16 @@ const DOWS=['日','月','火','水','木','金','土'];
 const SK='kakeibo_v6',CK='kakeibo_cats_v6',PK='kakeibo_port_v2';
 const PORT_COLORS=['#818cf8','#c084fc','#34d399','#fb923c','#f472b6','#fbbf24','#60a5fa','#f87171','#a78bfa','#2dd4bf'];
 
+const ALL_TABS=['dashboard','add','calendar','menu','yearly','portfolio','io'];
+const NAV_ACTIVE={dashboard:0,add:1,calendar:2,menu:3,yearly:3,portfolio:3,io:3};
+
 let txs=[],CATS=JSON.parse(JSON.stringify(DEFAULT_CATS)),ports=[];
 let fM=new Date().getMonth(),fY=new Date().getFullYear();
 let cType='expense',ePC,iPC,bC,yBC,portPieChart;
 let calY=new Date().getFullYear(),calM=new Date().getMonth(),selDate=null;
-let editingId=null,yearView=new Date().getFullYear(),portAddType='us';
+let calView='month',calEditingId=null;
+let yearView=new Date().getFullYear(),portAddType='us';
+let pendingDeleteId=null,pendingDeleteCtx=null;
 
 const fmt=n=>n.toLocaleString('ja-JP')+'円';
 const getAllCats=()=>Object.values(CATS).flat();
@@ -462,22 +498,41 @@ function toast(msg,color){
   document.body.appendChild(el);setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.remove(),300);},2000);
 }
 
-const TABS=['add','dashboard','yearly','portfolio','calendar','list','io'];
 function showTab(tab){
-  TABS.forEach((t,i)=>{
-    document.getElementById('tab-'+t).classList.toggle('hidden',t!==tab);
-    document.querySelectorAll('.nav-btn')[i].classList.toggle('active',t===tab);
-  });
-  editingId=null;
+  ALL_TABS.forEach(t=>{document.getElementById('tab-'+t).classList.toggle('hidden',t!==tab);});
+  const ai=NAV_ACTIVE[tab]??-1;
+  document.querySelectorAll('.nav-btn').forEach((btn,i)=>btn.classList.toggle('active',i===ai));
+  calEditingId=null;
   if(tab==='dashboard')renderDash();
   if(tab==='yearly')renderYearly();
   if(tab==='portfolio')renderPort();
   if(tab==='calendar')renderCal();
   if(tab==='add')renderCatUI();
-  if(tab==='list')renderList();
 }
 
-// カテゴリ
+// ── 削除確認 ──
+function confirmDelete(id,ctx){
+  pendingDeleteId=id;pendingDeleteCtx=ctx||'default';
+  document.getElementById('confirm-modal').classList.remove('hidden');
+}
+function closeConfirm(){
+  pendingDeleteId=null;pendingDeleteCtx=null;
+  document.getElementById('confirm-modal').classList.add('hidden');
+}
+function doConfirmedDelete(){
+  if(pendingDeleteCtx==='port'){
+    const id=pendingDeleteId;closeConfirm();
+    ports=ports.filter(p=>p.id!==id);savePorts();renderPort();return;
+  }
+  if(!pendingDeleteId)return;
+  const id=pendingDeleteId,ctx=pendingDeleteCtx;closeConfirm();
+  txs=txs.filter(t=>t.id!==id);save();
+  if(calEditingId===id)calEditingId=null;
+  renderDash();
+  if(ctx==='calendar')renderCalMonth();
+}
+
+// ── カテゴリ ──
 function renderCatUI(){
   const cats=CATS[cType];const sel=document.getElementById('form-category');
   const prev=sel.value;
@@ -508,7 +563,7 @@ function deleteCat(){
   const btn=document.querySelector('.cat-del-btn');
   if(btn.dataset.confirm==='1'){
     CATS[cType]=CATS[cType].filter(c=>c.id!==catId);saveCats();renderCatUI();toast('削除しました','#10b981');
-  } else {
+  }else{
     btn.dataset.confirm='1';btn.textContent='本当に削除？';btn.style.fontSize='11px';
     setTimeout(()=>{btn.dataset.confirm='';btn.textContent='🗑';btn.style.fontSize='14px';},3000);
   }
@@ -531,52 +586,8 @@ function addTransaction(){
   btn.textContent='✓ 保存しました！';btn.classList.add('saved');
   setTimeout(()=>{btn.textContent='追加する';btn.classList.remove('saved');},2000);
 }
-function deleteTx(id){
-  txs=txs.filter(t=>t.id!==id);save();
-  if(editingId===id)editingId=null;
-  renderList();renderDash();
-  if(!document.getElementById('tab-calendar').classList.contains('hidden'))renderCal();
-}
-function buildEditForm(tx){
-  const typeSel=Object.entries(TM).map(([k,v])=>`<button class="ie-type-btn" id="ie-btn-${k}" onclick="ieSetType('${tx.id}','${k}')">${v.label}</button>`).join('');
-  const catOpts=CATS[tx.type].map(c=>`<option value="${c.id}"${c.id===tx.category?' selected':''}>${c.label}</option>`).join('');
-  return `<div class="inline-edit" id="ie-${tx.id}">
-    <div class="ie-type">${typeSel}</div>
-    <div class="ie-row">
-      <div class="ie-field"><label>日付</label><input type="date" id="ie-date-${tx.id}" value="${tx.date}"></div>
-      <div class="ie-field"><label>金額（円）</label><input type="number" id="ie-amount-${tx.id}" value="${tx.amount}"></div>
-      <div class="ie-field"><label>カテゴリ</label><select id="ie-cat-${tx.id}">${catOpts}</select></div>
-      <div class="ie-field"><label>メモ</label><input type="text" id="ie-note-${tx.id}" value="${tx.note||''}"></div>
-    </div>
-    <div class="ie-actions">
-      <button class="ie-cancel" onclick="cancelEdit()">キャンセル</button>
-      <button class="ie-save" onclick="saveEdit('${tx.id}')">✓ 保存</button>
-    </div>
-  </div>`;
-}
-function ieSetType(txId,type){
-  const colors={income:'#10b981',investment:'#818cf8',expense:'#f43f5e'};
-  Object.keys(TM).forEach(t=>{const b=document.getElementById(`ie-btn-${t}`);if(b){b.style.background=t===type?colors[t]:'transparent';b.style.color=t===type?'#fff':'#9ca3af';}});
-  const sel=document.getElementById(`ie-cat-${txId}`);
-  if(sel)sel.innerHTML=CATS[type].map(c=>`<option value="${c.id}">${c.label}</option>`).join('');
-  const ie=document.getElementById(`ie-${txId}`);if(ie)ie.dataset.type=type;
-}
-function openEdit(id){if(editingId===id){cancelEdit();return;}editingId=id;renderList();}
-function cancelEdit(){editingId=null;renderList();}
-function saveEdit(id){
-  const tx=txs.find(t=>t.id===id);if(!tx)return;
-  const ie=document.getElementById(`ie-${id}`);
-  const type=ie&&ie.dataset.type?ie.dataset.type:tx.type;
-  const date=document.getElementById(`ie-date-${id}`).value;
-  const amount=Number(document.getElementById(`ie-amount-${id}`).value);
-  const category=document.getElementById(`ie-cat-${id}`).value;
-  const note=document.getElementById(`ie-note-${id}`).value;
-  if(!date||!amount||amount<=0)return;
-  txs=txs.map(t=>t.id===id?{...t,date,type,category,amount,note}:t);
-  save();editingId=null;renderList();renderDash();toast('更新しました','#818cf8');
-}
 
-// DASHBOARD
+// ── ダッシュボード ──
 function renderDash(){
   const f=filtered();
   const inc=f.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
@@ -607,7 +618,7 @@ function renderBarChart(){
   bC=new Chart(document.getElementById('barC'),{type:'bar',data:{labels:MONTHS,datasets:[{label:'収入',data:mk('income'),backgroundColor:'#34d399',borderRadius:4},{label:'支出',data:mk('expense'),backgroundColor:'#fda4af',borderRadius:4},{label:'投資',data:mk('investment'),backgroundColor:'#a5b4fc',borderRadius:4}]},options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#9ca3af',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#9ca3af',font:{size:9},callback:v=>v>=10000?`${v/10000}万`:v},grid:{color:'#f3f4f6'}}}}});
 }
 
-// YEARLY
+// ── 年間サマリー ──
 function yearPrev(){yearView--;renderYearly();}
 function yearNext(){yearView++;renderYearly();}
 function renderYearly(){
@@ -634,8 +645,7 @@ function renderYearly(){
     const mTx=yTxs.filter(t=>new Date(t.date).getMonth()===i);
     const mInc=mTx.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
     const mOut=mTx.filter(t=>t.type!=='income').reduce((s,t)=>s+t.amount,0);
-    const mBal=mInc-mOut;
-    const mExp=mTx.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+    const mBal=mInc-mOut;const mExp=mTx.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
     const pct=Math.round(mExp/maxExp*100);
     return `<div class="year-month-row">
       <div class="year-month-name">${m}</div>
@@ -645,15 +655,14 @@ function renderYearly(){
   }).join('');
 }
 
-// PORTFOLIO
+// ── ポートフォリオ ──
 function setPortAddType(type){
   portAddType=type;
   document.getElementById('port-form-us').classList.toggle('hidden',type!=='us');
   document.getElementById('port-form-fund').classList.toggle('hidden',type!=='fund');
   ['us','fund'].forEach(t=>{
     const btn=document.getElementById('padd-'+t);
-    btn.style.background=t===type?'#fff':'transparent';
-    btn.style.color=t===type?'#7c3aed':'#9ca3af';
+    btn.style.background=t===type?'#fff':'transparent';btn.style.color=t===type?'#7c3aed':'#9ca3af';
     btn.style.boxShadow=t===type?'0 2px 8px rgba(0,0,0,0.08)':'none';
   });
 }
@@ -665,8 +674,7 @@ function addUsStock(){
   const account=document.getElementById('us-account').value;
   if(!ticker||!buy||!qty)return;
   ports.push({id:Date.now().toString(),type:'us',ticker,name,account,buy,qty,now:buy*qty,updatedAt:'未取得',color:PORT_COLORS[ports.length%PORT_COLORS.length]});
-  savePorts();
-  ['us-ticker','us-name','us-buy','us-qty'].forEach(id=>document.getElementById(id).value='');
+  savePorts();['us-ticker','us-name','us-buy','us-qty'].forEach(id=>document.getElementById(id).value='');
   renderPort();toast('追加しました！「🔄 更新」で価格を取得してください','#10b981');
 }
 function addFund(){
@@ -676,8 +684,7 @@ function addFund(){
   const now=Number(document.getElementById('fund-now').value)||cost;
   if(!name||!cost)return;
   ports.push({id:Date.now().toString(),type:'fund',name,account,cost,now,buy:cost,qty:1,updatedAt:new Date().toLocaleDateString('ja-JP'),color:PORT_COLORS[ports.length%PORT_COLORS.length]});
-  savePorts();
-  ['fund-name','fund-cost','fund-now'].forEach(id=>document.getElementById(id).value='');
+  savePorts();['fund-name','fund-cost','fund-now'].forEach(id=>document.getElementById(id).value='');
   renderPort();toast('追加しました','#10b981');
 }
 async function fetchPrice(ticker){
@@ -687,38 +694,34 @@ async function fetchUsdJpy(){
   try{const res=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/USDJPY=X?interval=1d&range=1d',{mode:'cors'});if(!res.ok)return 155;const data=await res.json();return data?.chart?.result?.[0]?.meta?.regularMarketPrice||155;}catch(e){return 155;}
 }
 async function refreshRealtime(){
-  const btn=document.getElementById('refresh-btn');
-  btn.textContent='取得中...';btn.disabled=true;
+  const btn=document.getElementById('refresh-btn');btn.textContent='取得中...';btn.disabled=true;
   const usItems=ports.filter(p=>p.type==='us');
   if(!usItems.length){btn.textContent='🔄 更新';btn.disabled=false;toast('米国株がありません','#9ca3af');return;}
   try{
-    const usdJpy=await fetchUsdJpy();
-    let updated=0;
+    const usdJpy=await fetchUsdJpy();let updated=0;
     for(const p of usItems){
       const usdPrice=await fetchPrice(p.ticker);
       if(usdPrice){
         const jpyTotal=Math.round(usdPrice*usdJpy*p.qty);
-        ports=ports.map(x=>x.id===p.id?{...x,now:jpyTotal,usdPrice,usdJpy,updatedAt:new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}:x);
-        updated++;
+        ports=ports.map(x=>x.id===p.id?{...x,now:jpyTotal,usdPrice,usdJpy,updatedAt:new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}:x);updated++;
       }
     }
-    savePorts();renderPort();
-    toast(updated>0?`${updated}銘柄を更新（$1=¥${Math.round(usdJpy)}）`:'取得失敗','#10b981');
+    savePorts();renderPort();toast(updated>0?`${updated}銘柄を更新（$1=¥${Math.round(usdJpy)}）`:'取得失敗','#10b981');
   }catch(e){toast('価格取得に失敗しました','#f43f5e');}
   btn.textContent='🔄 更新';btn.disabled=false;
 }
 function updateFundPrice(id){
-  const val=Number(document.getElementById(`fn-${id}`).value);
-  if(!val||val<=0)return;
+  const val=Number(document.getElementById(`fn-${id}`).value);if(!val||val<=0)return;
   ports=ports.map(p=>p.id===id?{...p,now:val,updatedAt:new Date().toLocaleDateString('ja-JP')}:p);
   savePorts();renderPort();toast('評価額を更新しました','#818cf8');
 }
-function deletePort(id){ports=ports.filter(p=>p.id!==id);savePorts();renderPort();}
+function deletePort(id){
+  confirmDelete(id,'port');
+}
 function renderPort(){
   const totalNow=ports.reduce((s,p)=>s+p.now,0);
   const totalCost=ports.reduce((s,p)=>s+(p.type==='us'?p.buy*p.qty:p.cost),0);
-  const totalPnl=totalNow-totalCost;
-  const pct=totalCost>0?((totalPnl/totalCost)*100).toFixed(1):0;
+  const totalPnl=totalNow-totalCost;const pct=totalCost>0?((totalPnl/totalCost)*100).toFixed(1):0;
   const pnlColor=totalPnl>=0?'rgba(255,255,255,0.9)':'#fca5a5';
   document.getElementById('port-total').textContent='¥'+Math.round(totalNow).toLocaleString();
   document.getElementById('port-total-pnl').innerHTML=totalCost>0?`<span style="color:${pnlColor}">${totalPnl>=0?'+':''}${fmt(Math.round(totalPnl))} (${totalPnl>=0?'+':''}${pct}%)</span>`:'';
@@ -731,9 +734,7 @@ function renderPort(){
     }).join('');
   }
   if(!ports.length){document.getElementById('port-list').innerHTML='';return;}
-  const usItems=ports.filter(p=>p.type==='us');
-  const fundItems=ports.filter(p=>p.type==='fund');
-  let html='';
+  const usItems=ports.filter(p=>p.type==='us');const fundItems=ports.filter(p=>p.type==='fund');let html='';
   if(usItems.length){
     html+=`<div class="port-section"><div class="port-section-title">🇺🇸 米国株・ETF <span class="port-section-badge" style="background:#d1fae5;color:#059669">自動取得</span></div>${usItems.map(p=>{
       const cost=p.buy*p.qty;const pnl=p.now-cost;const pct2=cost>0?((pnl/cost)*100).toFixed(1):0;const plus=pnl>=0;
@@ -749,11 +750,47 @@ function renderPort(){
   document.getElementById('port-list').innerHTML=html;
 }
 
-// CALENDAR
-function calPrev(){calM--;if(calM<0){calM=11;calY--;}renderCal();}
-function calNext(){calM++;if(calM>11){calM=0;calY++;}renderCal();}
-function renderCal(){
-  document.getElementById('cal-title').textContent=`${calY}年 ${MONTHS[calM]}`;
+// ── カレンダー ──
+function renderCal(){if(calView==='year')renderCalYear();else renderCalMonth();}
+function toggleCalView(){calView=calView==='month'?'year':'month';renderCal();}
+function calYearNav(dir){calY+=dir;renderCal();}
+function calPrev(){calM--;if(calM<0){calM=11;calY--;}renderCalMonth();}
+function calNext(){calM++;if(calM>11){calM=0;calY++;}renderCalMonth();}
+function selectCalMonth(m){calM=m;calView='month';selDate=null;renderCal();}
+
+function renderCalYear(){
+  document.getElementById('cal-year-display').textContent=calY;
+  document.getElementById('cal-year-arrow').textContent='▲';
+  document.getElementById('cal-yr-prev').style.visibility='visible';
+  document.getElementById('cal-yr-next').style.visibility='visible';
+  document.getElementById('cal-month-bar').classList.add('hidden');
+  document.getElementById('cal-year-view').classList.remove('hidden');
+  document.getElementById('cal-month-view').classList.add('hidden');
+  const today=new Date();
+  document.getElementById('cal-year-grid').innerHTML=MONTHS.map((m,i)=>{
+    const mTxs=txs.filter(t=>{const d=new Date(t.date);return d.getFullYear()===calY&&d.getMonth()===i;});
+    const exp=mTxs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+    const inc=mTxs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+    const isCur=today.getFullYear()===calY&&today.getMonth()===i;
+    return `<div class="cal-month-card${isCur?' cur-month':''}" onclick="selectCalMonth(${i})">
+      <div class="cal-month-card-name">${m}</div>
+      ${inc>0?`<div class="cal-month-card-inc">+${inc>=10000?(inc/10000).toFixed(1)+'万':inc.toLocaleString()}</div>`:''}
+      ${exp>0?`<div class="cal-month-card-exp">-${exp>=10000?(exp/10000).toFixed(1)+'万':exp.toLocaleString()}</div>`:''}
+      ${inc===0&&exp===0?`<div class="cal-month-card-empty">—</div>`:''}
+    </div>`;
+  }).join('');
+  document.getElementById('cal-detail').innerHTML='';
+}
+
+function renderCalMonth(){
+  document.getElementById('cal-year-display').textContent=calY;
+  document.getElementById('cal-year-arrow').textContent='▼';
+  document.getElementById('cal-yr-prev').style.visibility='hidden';
+  document.getElementById('cal-yr-next').style.visibility='hidden';
+  document.getElementById('cal-month-bar').classList.remove('hidden');
+  document.getElementById('cal-year-view').classList.add('hidden');
+  document.getElementById('cal-month-view').classList.remove('hidden');
+  document.getElementById('cal-title').textContent=MONTHS[calM];
   const lastDay=new Date(calY,calM+1,0).getDate();const startDow=new Date(calY,calM,1).getDay();
   const today=new Date();const dm={};
   txs.forEach(t=>{const d=new Date(t.date);if(d.getFullYear()===calY&&d.getMonth()===calM){const k=d.getDate();if(!dm[k])dm[k]={exp:0,inc:0};if(t.type==='income')dm[k].inc+=t.amount;else dm[k].exp+=t.amount;}});
@@ -769,89 +806,112 @@ function renderCal(){
       ${data&&data.inc>0?`<div class="cal-inc">+${data.inc>=10000?(data.inc/10000).toFixed(1)+'万':data.inc.toLocaleString()}</div>`:''}
     </div>`;
   }
-  document.getElementById('cal-grid').innerHTML=h;if(selDate)renderCalDetail(selDate);
+  document.getElementById('cal-grid').innerHTML=h;
+  if(selDate)renderCalDetail(selDate);
 }
-function selCalDay(ds){selDate=ds;renderCal();}
+function selCalDay(ds){selDate=ds;calEditingId=null;renderCalMonth();}
+
 function renderCalDetail(date){
   const items=txs.filter(t=>t.date===date);
   const d=new Date(date);const label=`${d.getMonth()+1}月${d.getDate()}日（${DOWS[d.getDay()]}）`;
-  if(!items.length){document.getElementById('cal-detail').innerHTML=`<div class="cal-detail"><div class="cal-detail-title">${label}</div><div style="color:#d1d5db;font-size:12px">取引なし</div></div>`;return;}
-  document.getElementById('cal-detail').innerHTML=`<div class="cal-detail">
+  const detailEl=document.getElementById('cal-detail');
+  if(!items.length){
+    detailEl.innerHTML=`<div class="cal-detail"><div class="cal-detail-title">${label}</div><div style="color:#d1d5db;font-size:12px">取引なし</div></div>`;
+    return;
+  }
+  detailEl.innerHTML=`<div class="cal-detail">
     <div class="cal-detail-title">${label}</div>
-    ${items.map(t=>{const cat=getCat(t.category);const m=TM[t.type];return `<div class="cal-tx">
-      <div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:${cat.color}"></div>
-        <div><div style="font-size:12px;font-weight:600;color:#3d2c6b">${t.note||cat.label}</div><div style="font-size:10px;color:#9ca3af">${m.label}・${cat.label}</div></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <div style="font-size:13px;font-weight:700;color:${t.type==='income'?'#10b981':'#f43f5e'}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</div>
-        <button style="background:none;border:none;cursor:pointer;color:#fca5a5;font-size:13px" onclick="deleteTx('${t.id}')">×</button>
-      </div>
-    </div>`;}).join('')}
+    ${items.map(t=>{
+      const cat=getCat(t.category);const m=TM[t.type];const isEd=calEditingId===t.id;
+      return `<div>
+        <div class="cal-tx">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:8px;height:8px;border-radius:50%;background:${cat.color}"></div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:#3d2c6b">${t.note||cat.label}</div>
+              <div style="font-size:10px;color:#9ca3af">${m.label}・${cat.label}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <div style="font-size:13px;font-weight:700;color:${t.type==='income'?'#10b981':'#f43f5e'}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</div>
+            <button style="background:none;border:none;cursor:pointer;color:${isEd?'#c084fc':'#d1d5db'};font-size:15px;padding:4px" onclick="openCalEdit('${t.id}')">✏️</button>
+            <button style="background:none;border:none;cursor:pointer;color:#fca5a5;font-size:15px;padding:4px" onclick="confirmDelete('${t.id}','calendar')">×</button>
+          </div>
+        </div>
+        ${isEd?buildCalEditForm(t):''}
+      </div>`;
+    }).join('')}
   </div>`;
-}
-
-// LIST
-function renderList(){
-  const f=filtered().sort((a,b)=>new Date(b.date)-new Date(a.date));
-  document.getElementById('list-count').textContent=`${MONTHS[fM]}の取引 ${f.length}件`;
-  if(!f.length){document.getElementById('tx-list').innerHTML='<div class="empty"><div style="font-size:28px;margin-bottom:8px">📭</div>取引がありません</div>';return;}
-  document.getElementById('tx-list').innerHTML=f.map(t=>{
-    const cat=getCat(t.category);const m=TM[t.type];const isEditing=editingId===t.id;
-    return `<div class="tx-wrap">
-      <div class="tx-item${isEditing?' editing':''}">
-        <div class="tx-left"><div class="tx-dot" style="background:${cat.color}"></div>
-          <div><div class="tx-name">${t.note||cat.label}</div><div class="tx-meta">${t.date}・<span style="color:${m.color}">${m.label}</span>・${cat.label}</div></div>
-        </div>
-        <div class="tx-right">
-          <div class="tx-amount" style="color:${t.type==='income'?'#10b981':'#f43f5e'}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</div>
-          <button class="tx-edit-btn${isEditing?' active':''}" onclick="openEdit('${t.id}')">✏️</button>
-          <button class="tx-del-btn" onclick="deleteTx('${t.id}')">×</button>
-        </div>
-      </div>
-      ${isEditing?buildEditForm(t):''}
-    </div>`;
-  }).join('');
-  if(editingId){
-    const tx=txs.find(t=>t.id===editingId);
+  if(calEditingId){
+    const tx=txs.find(t=>t.id===calEditingId);
     if(tx){
       const colors={income:'#10b981',investment:'#818cf8',expense:'#f43f5e'};
-      Object.keys(TM).forEach(t=>{const b=document.getElementById(`ie-btn-${t}`);if(b){b.style.background=t===tx.type?colors[t]:'transparent';b.style.color=t===tx.type?'#fff':'#9ca3af';}});
-      const ie=document.getElementById(`ie-${editingId}`);if(ie)ie.dataset.type=tx.type;
+      Object.keys(TM).forEach(t=>{const b=document.getElementById(`cal-ie-btn-${t}`);if(b){b.style.background=t===tx.type?colors[t]:'transparent';b.style.color=t===tx.type?'#fff':'#9ca3af';}});
+      const ie=document.getElementById(`cal-ie-${calEditingId}`);if(ie)ie.dataset.type=tx.type;
     }
   }
 }
+function openCalEdit(id){calEditingId=calEditingId===id?null:id;if(selDate)renderCalDetail(selDate);}
+function buildCalEditForm(tx){
+  const typeSel=Object.entries(TM).map(([k,v])=>`<button class="ie-type-btn" id="cal-ie-btn-${k}" onclick="calIeSetType('${tx.id}','${k}')">${v.label}</button>`).join('');
+  const catOpts=CATS[tx.type].map(c=>`<option value="${c.id}"${c.id===tx.category?' selected':''}>${c.label}</option>`).join('');
+  return `<div class="inline-edit" id="cal-ie-${tx.id}" data-type="${tx.type}">
+    <div class="ie-type">${typeSel}</div>
+    <div class="ie-row">
+      <div class="ie-field"><label>日付</label><input type="date" id="cal-ie-date-${tx.id}" value="${tx.date}"></div>
+      <div class="ie-field"><label>金額（円）</label><input type="number" id="cal-ie-amount-${tx.id}" value="${tx.amount}"></div>
+      <div class="ie-field"><label>カテゴリ</label><select id="cal-ie-cat-${tx.id}">${catOpts}</select></div>
+      <div class="ie-field"><label>メモ</label><input type="text" id="cal-ie-note-${tx.id}" value="${tx.note||''}"></div>
+    </div>
+    <div class="ie-actions">
+      <button class="ie-cancel" onclick="openCalEdit('${tx.id}')">キャンセル</button>
+      <button class="ie-save" onclick="saveCalEdit('${tx.id}')">✓ 保存</button>
+    </div>
+  </div>`;
+}
+function calIeSetType(txId,type){
+  const colors={income:'#10b981',investment:'#818cf8',expense:'#f43f5e'};
+  Object.keys(TM).forEach(t=>{const b=document.getElementById(`cal-ie-btn-${t}`);if(b){b.style.background=t===type?colors[t]:'transparent';b.style.color=t===type?'#fff':'#9ca3af';}});
+  const sel=document.getElementById(`cal-ie-cat-${txId}`);
+  if(sel)sel.innerHTML=CATS[type].map(c=>`<option value="${c.id}">${c.label}</option>`).join('');
+  const ie=document.getElementById(`cal-ie-${txId}`);if(ie)ie.dataset.type=type;
+}
+function saveCalEdit(id){
+  const tx=txs.find(t=>t.id===id);if(!tx)return;
+  const ie=document.getElementById(`cal-ie-${id}`);
+  const type=ie&&ie.dataset.type?ie.dataset.type:tx.type;
+  const date=document.getElementById(`cal-ie-date-${id}`).value;
+  const amount=Number(document.getElementById(`cal-ie-amount-${id}`).value);
+  const category=document.getElementById(`cal-ie-cat-${id}`).value;
+  const note=document.getElementById(`cal-ie-note-${id}`).value;
+  if(!date||!amount||amount<=0)return;
+  txs=txs.map(t=>t.id===id?{...t,date,type,category,amount,note}:t);
+  save();calEditingId=null;
+  selDate=date;calY=new Date(date).getFullYear();calM=new Date(date).getMonth();
+  renderCalMonth();renderDash();toast('更新しました','#818cf8');
+}
 
-// EXPORT / IMPORT
+// ── エクスポート・インポート ──
 function exportJSON(){
   const data={version:1,exportedAt:new Date().toISOString(),txs,CATS,ports};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`家計簿_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();URL.revokeObjectURL(a.href);
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`家計簿_${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);
   toast('JSONをエクスポートしました','#818cf8');
 }
 function exportCSV(){
   const rows=[['日付','種別','カテゴリ','金額','メモ']];
-  txs.sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{
-    const cat=getCat(t.category);
-    rows.push([t.date,TM[t.type].label,cat.label,t.amount,t.note||'']);
-  });
+  txs.sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{const cat=getCat(t.category);rows.push([t.date,TM[t.type].label,cat.label,t.amount,t.note||'']);});
   const bom='\uFEFF';
   const csv=bom+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`家計簿_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();URL.revokeObjectURL(a.href);
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`家計簿_${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(a.href);
   toast('CSVをエクスポートしました','#34d399');
 }
 function onDragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('drag-over');}
 function onDragLeave(e){document.getElementById('drop-zone').classList.remove('drag-over');}
-function onDrop(e){
-  e.preventDefault();document.getElementById('drop-zone').classList.remove('drag-over');
-  const file=e.dataTransfer.files[0];if(file)readFile(file);
-}
+function onDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('drag-over');const file=e.dataTransfer.files[0];if(file)readFile(file);}
 function onFileSelect(e){const file=e.target.files[0];if(file)readFile(file);e.target.value='';}
 function readFile(file){
   const reader=new FileReader();
@@ -864,45 +924,28 @@ function readFile(file){
 }
 function importJSON(text){
   try{
-    const data=JSON.parse(text);
-    if(!data.txs)throw new Error('invalid');
-    const existIds=new Set(txs.map(t=>t.id));
-    let added=0;
+    const data=JSON.parse(text);if(!data.txs)throw new Error('invalid');
+    const existIds=new Set(txs.map(t=>t.id));let added=0;
     data.txs.forEach(t=>{if(!existIds.has(t.id)){txs.push(t);added++;}});
-    if(data.CATS){
-      ['income','investment','expense'].forEach(type=>{
-        if(data.CATS[type]){
-          const existCatIds=new Set(CATS[type].map(c=>c.id));
-          data.CATS[type].forEach(c=>{if(!existCatIds.has(c.id))CATS[type].push(c);});
-        }
-      });
-    }
-    if(data.ports){
-      const existPortIds=new Set(ports.map(p=>p.id));
-      data.ports.forEach(p=>{if(!existPortIds.has(p.id))ports.push(p);});
-    }
-    save();saveCats();savePorts();
-    renderDash();
+    if(data.CATS){['income','investment','expense'].forEach(type=>{if(data.CATS[type]){const existCatIds=new Set(CATS[type].map(c=>c.id));data.CATS[type].forEach(c=>{if(!existCatIds.has(c.id))CATS[type].push(c);});}});}
+    if(data.ports){const existPortIds=new Set(ports.map(p=>p.id));data.ports.forEach(p=>{if(!existPortIds.has(p.id))ports.push(p);});}
+    save();saveCats();savePorts();renderDash();
     toast(`✓ ${added}件の取引をインポートしました`,'#10b981');
   }catch(e){toast('JSONの読み込みに失敗しました','#f43f5e');}
 }
 function importCSV(text){
   try{
     const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
-    const typeMap={'収入':'income','支出':'expense','投資':'investment'};
-    let added=0;
+    const typeMap={'収入':'income','支出':'expense','投資':'investment'};let added=0;
     lines.slice(1).forEach(line=>{
       const cols=line.match(/("(?:[^"]|"")*"|[^,]*)/g).map(v=>v.replace(/^"|"$/g,'').replace(/""/g,'"'));
       const [date,typeLabel,catLabel,amtStr,note]=cols;
-      const type=typeMap[typeLabel];const amount=Number(amtStr);
-      if(!date||!type||!amount)return;
+      const type=typeMap[typeLabel];const amount=Number(amtStr);if(!date||!type||!amount)return;
       let cat=getAllCats().find(c=>c.label===catLabel);
       if(!cat){const id='csv_'+Date.now()+'_'+Math.random().toString(36).slice(2);CATS[type].push({id,label:catLabel||'その他',color:'#d1d5db'});cat=CATS[type][CATS[type].length-1];}
-      txs.push({id:Date.now().toString()+'_'+Math.random().toString(36).slice(2),date,type,category:cat.id,amount,note:note||''});
-      added++;
+      txs.push({id:Date.now().toString()+'_'+Math.random().toString(36).slice(2),date,type,category:cat.id,amount,note:note||''});added++;
     });
-    save();saveCats();renderDash();
-    toast(`✓ ${added}件の取引をインポートしました`,'#10b981');
+    save();saveCats();renderDash();toast(`✓ ${added}件の取引をインポートしました`,'#10b981');
   }catch(e){toast('CSVの読み込みに失敗しました','#f43f5e');}
 }
 
@@ -911,6 +954,5 @@ load();setType('expense');setPortAddType('us');
 document.getElementById('form-date').value=new Date().toISOString().slice(0,10);
 renderDash();
 </script>
-
 </body>
 </html>
