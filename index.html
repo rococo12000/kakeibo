@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>家計簿</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
@@ -186,6 +186,12 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 .confirm-ok{flex:1;padding:13px 0;border-radius:14px;border:none;background:linear-gradient(135deg,#f43f5e,#fb7185);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(244,63,94,0.3)}
 /* トースト */
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;pointer-events:none;transition:opacity 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+/* 期間バナー */
+.period-banner{background:#f3f0ff;border-radius:12px;padding:8px 14px;font-size:12px;font-weight:700;color:#7c3aed;text-align:center;margin-bottom:10px}
+/* 開始日設定 */
+.startday-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:16px 0}
+.sd-btn{padding:10px 0;border-radius:12px;border:1.5px solid #e9d5ff;background:#f9f7ff;color:#3d2c6b;font-size:14px;font-weight:700;cursor:pointer;text-align:center}
+.sd-btn.active{background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(192,132,252,0.4)}
 /* 下部ナビ（4ボタン） */
 .nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #f3f0ff;z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(0,0,0,0.08)}
 .nav-btn{flex:1;padding:14px 8px 13px;border:none;cursor:pointer;background:transparent;color:#c4b5fd;border-top:3px solid transparent;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
@@ -207,6 +213,7 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
 <div class="content">
   <!-- DASHBOARD -->
   <div id="tab-dashboard">
+    <div id="dash-period-banner" class="period-banner hidden"></div>
     <div class="grid2">
       <div class="card" id="ci"></div><div class="card" id="ce"></div>
       <div class="card" id="cv"></div><div class="card" id="cb"></div>
@@ -313,6 +320,14 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
         </div>
         <span class="menu-item-arrow">›</span>
       </button>
+      <button class="menu-item" onclick="showTab('startday')">
+        <span class="menu-item-icon">📅</span>
+        <div class="menu-item-body">
+          <div class="menu-item-label">開始日設定</div>
+          <div class="menu-item-desc" id="menu-startday-desc">1日始まり（月初〜月末）</div>
+        </div>
+        <span class="menu-item-arrow">›</span>
+      </button>
     </div>
   </div>
 
@@ -385,6 +400,17 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
     </div>
     <div class="port-hint">🇺🇸 米国株・ETFは「🔄 更新」で価格を自動取得。<br>📈 投資信託・NISAは評価額を手動で更新してください。</div>
     <div id="port-list"></div>
+  </div>
+
+  <!-- START DAY SETTING -->
+  <div id="tab-startday" class="hidden">
+    <div class="form-box">
+      <div class="form-title">📅 集計開始日の設定</div>
+      <p style="font-size:12px;color:#9ca3af;margin-bottom:4px">給料日など、月の集計を開始したい日を選んでください。</p>
+      <p id="startday-current" style="font-size:13px;font-weight:700;color:#7c3aed;margin-bottom:4px">1日始まり（月初〜月末）</p>
+      <div class="startday-grid" id="startday-grid"></div>
+      <p style="font-size:11px;color:#9ca3af;line-height:1.7">例：15を選ぶと毎月15日〜翌月14日が1ヶ月になります。<br>ホーム・カレンダー両方に反映されます。</p>
+    </div>
   </div>
 
   <!-- EXPORT/IMPORT -->
@@ -464,11 +490,12 @@ const TM={
 };
 const MONTHS=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const DOWS=['日','月','火','水','木','金','土'];
-const SK='kakeibo_v6',CK='kakeibo_cats_v6',PK='kakeibo_port_v2';
+const SK='kakeibo_v6',CK='kakeibo_cats_v6',PK='kakeibo_port_v2',STDK='kakeibo_startday';
 const PORT_COLORS=['#818cf8','#c084fc','#34d399','#fb923c','#f472b6','#fbbf24','#60a5fa','#f87171','#a78bfa','#2dd4bf'];
 
-const ALL_TABS=['dashboard','add','calendar','menu','yearly','portfolio','io'];
-const NAV_ACTIVE={dashboard:0,add:1,calendar:2,menu:3,yearly:3,portfolio:3,io:3};
+// ナビタブのマッピング（サブタブはメニューをアクティブに）
+const ALL_TABS=['dashboard','add','calendar','menu','yearly','portfolio','io','startday'];
+const NAV_ACTIVE={dashboard:0,add:1,calendar:2,menu:3,yearly:3,portfolio:3,io:3,startday:3};
 
 let txs=[],CATS=JSON.parse(JSON.stringify(DEFAULT_CATS)),ports=[];
 let fM=new Date().getMonth(),fY=new Date().getFullYear();
@@ -477,6 +504,7 @@ let calY=new Date().getFullYear(),calM=new Date().getMonth(),selDate=null;
 let calView='month',calEditingId=null;
 let yearView=new Date().getFullYear(),portAddType='us';
 let pendingDeleteId=null,pendingDeleteCtx=null;
+let startDay=1;
 
 const fmt=n=>n.toLocaleString('ja-JP')+'円';
 const getAllCats=()=>Object.values(CATS).flat();
@@ -488,8 +516,17 @@ function load(){
   try{const d=localStorage.getItem(SK);if(d)txs=JSON.parse(d);}catch(e){}
   try{const d=localStorage.getItem(CK);if(d)CATS=JSON.parse(d);}catch(e){}
   try{const d=localStorage.getItem(PK);if(d)ports=JSON.parse(d);}catch(e){}
+  try{const d=localStorage.getItem(STDK);if(d){startDay=parseInt(d)||1;}}catch(e){}
 }
-const filtered=()=>txs.filter(t=>{const d=new Date(t.date);return d.getMonth()===fM&&d.getFullYear()===fY;});
+const clampDay=(y,m,d)=>Math.min(d,new Date(y,m+1,0).getDate());
+const filtered=()=>{
+  if(startDay===1)return txs.filter(t=>{const d=new Date(t.date);return d.getMonth()===fM&&d.getFullYear()===fY;});
+  const aSD=clampDay(fY,fM,startDay);
+  const start=new Date(fY,fM,aSD);
+  const nM=fM===11?0:fM+1,nY=fM===11?fY+1:fY;
+  const end=new Date(nY,nM,clampDay(nY,nM,startDay-1),23,59,59);
+  return txs.filter(t=>{const d=new Date(t.date);return d>=start&&d<=end;});
+};
 
 function toast(msg,color){
   document.querySelectorAll('.toast').forEach(e=>e.remove());
@@ -508,6 +545,8 @@ function showTab(tab){
   if(tab==='portfolio')renderPort();
   if(tab==='calendar')renderCal();
   if(tab==='add')renderCatUI();
+  if(tab==='menu')updateMenuStartDayDesc();
+  if(tab==='startday')renderStartDaySetting();
 }
 
 // ── 削除確認 ──
@@ -520,16 +559,13 @@ function closeConfirm(){
   document.getElementById('confirm-modal').classList.add('hidden');
 }
 function doConfirmedDelete(){
-  if(pendingDeleteCtx==='port'){
-    const id=pendingDeleteId;closeConfirm();
-    ports=ports.filter(p=>p.id!==id);savePorts();renderPort();return;
-  }
   if(!pendingDeleteId)return;
-  const id=pendingDeleteId,ctx=pendingDeleteCtx;closeConfirm();
+  const id=pendingDeleteId,ctx=pendingDeleteCtx;
+  closeConfirm();
   txs=txs.filter(t=>t.id!==id);save();
   if(calEditingId===id)calEditingId=null;
   renderDash();
-  if(ctx==='calendar')renderCalMonth();
+  if(ctx==='calendar'){renderCalMonth();}
 }
 
 // ── カテゴリ ──
@@ -587,6 +623,32 @@ function addTransaction(){
   setTimeout(()=>{btn.textContent='追加する';btn.classList.remove('saved');},2000);
 }
 
+// ── 開始日設定 ──
+function setStartDay(day){
+  startDay=day;
+  localStorage.setItem(STDK,day);
+  const now=new Date();
+  if(startDay===1){fM=now.getMonth();fY=now.getFullYear();}
+  else if(now.getDate()>=startDay){fM=now.getMonth();fY=now.getFullYear();}
+  else{fM=now.getMonth()===0?11:now.getMonth()-1;fY=now.getMonth()===0?now.getFullYear()-1:now.getFullYear();}
+  renderStartDaySetting();updateMenuStartDayDesc();renderDash();
+  toast(`${day}日始まりに設定しました`,'#818cf8');
+}
+function updateMenuStartDayDesc(){
+  const el=document.getElementById('menu-startday-desc');if(!el)return;
+  if(startDay===1){el.textContent='1日始まり（月初〜月末）';el.style.color='#9ca3af';}
+  else{el.textContent=`${startDay}日始まり（毎月${startDay}日〜翌月${startDay-1}日）`;el.style.color='#7c3aed';}
+}
+function renderStartDaySetting(){
+  const grid=document.getElementById('startday-grid');if(!grid)return;
+  let h='';for(let d=1;d<=31;d++)h+=`<button class="sd-btn${startDay===d?' active':''}" onclick="setStartDay(${d})">${d}</button>`;
+  grid.innerHTML=h;
+  const cur=document.getElementById('startday-current');if(!cur)return;
+  cur.textContent=startDay===1?'現在：1日始まり（月初〜月末）':`現在：${startDay}日始まり（毎月${startDay}日〜翌月${startDay-1}日）`;
+}
+function dashPrev(){fM--;if(fM<0){fM=11;fY--;}renderDash();}
+function dashNext(){fM++;if(fM>11){fM=0;fY++;}renderDash();}
+
 // ── ダッシュボード ──
 function renderDash(){
   const f=filtered();
@@ -594,7 +656,14 @@ function renderDash(){
   const exp=f.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
   const inv=f.filter(t=>t.type==='investment').reduce((s,t)=>s+t.amount,0);
   const bal=inc-exp-inv;
-  [{id:'ci',label:'収入',v:inc,color:'#10b981',bg:'#f0fdf4'},{id:'ce',label:'支出',v:exp,color:'#f43f5e',bg:'#fff1f2'},{id:'cv',label:'投資',v:inv,color:'#818cf8',bg:'#eef2ff'},{id:'cb',label:'月のあまり',v:bal,color:bal>=0?'#7c3aed':'#f43f5e',bg:bal>=0?'#faf5ff':'#fff1f2'}].forEach(c=>{
+  const banner=document.getElementById('dash-period-banner');
+  let bannerLabel;
+  if(startDay===1){bannerLabel=`📅 ${fY}年${fM+1}月`;}
+  else{const nM=fM===11?0:fM+1,nY=fM===11?fY+1:fY;const aSD=clampDay(fY,fM,startDay),aED=clampDay(nY,nM,startDay-1);bannerLabel=`💰 ${fY}年${fM+1}月${aSD}日〜${nY}年${nM+1}月${aED}日`;}
+  banner.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><button class="cal-nb" onclick="dashPrev()" style="font-size:13px;padding:6px 14px">＜</button><span>${bannerLabel}</span><button class="cal-nb" onclick="dashNext()" style="font-size:13px;padding:6px 14px">＞</button></div>`;
+  banner.classList.remove('hidden');
+  const remainLabel=startDay===1?'月のあまり':'期間のあまり';
+  [{id:'ci',label:'収入',v:inc,color:'#10b981',bg:'#f0fdf4'},{id:'ce',label:'支出',v:exp,color:'#f43f5e',bg:'#fff1f2'},{id:'cv',label:'投資',v:inv,color:'#818cf8',bg:'#eef2ff'},{id:'cb',label:remainLabel,v:bal,color:bal>=0?'#7c3aed':'#f43f5e',bg:bal>=0?'#faf5ff':'#fff1f2'}].forEach(c=>{
     const el=document.getElementById(c.id);el.style.background=c.bg;el.style.border='none';
     el.innerHTML=`<div class="card-label">${c.label}</div><div class="card-value" style="color:${c.color}">${c.id==='cb'&&bal>=0?'+':''}${fmt(c.v)}</div>`;
   });
@@ -613,7 +682,12 @@ function renderPieChart(cid,lid,f,type){
   document.getElementById(lid).innerHTML=entries.map(([id,v])=>`<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-dot" style="background:${getCat(id).color}"></div><span style="font-size:10px;color:#6b7280">${getCat(id).label}</span></div><span style="font-size:10px;font-weight:700;color:#3d2c6b">${fmt(v)}</span></div>`).join('');
 }
 function renderBarChart(){
-  const mk=type=>MONTHS.map((_,i)=>txs.filter(t=>new Date(t.date).getMonth()===i&&new Date(t.date).getFullYear()===fY&&t.type===type).reduce((s,t)=>s+t.amount,0));
+  const mk=type=>MONTHS.map((_,i)=>{
+    if(startDay===1)return txs.filter(t=>new Date(t.date).getMonth()===i&&new Date(t.date).getFullYear()===fY&&t.type===type).reduce((s,t)=>s+t.amount,0);
+    const aSD=clampDay(fY,i,startDay),nM=i===11?0:i+1,nY=i===11?fY+1:fY;
+    const ps=new Date(fY,i,aSD),pe=new Date(nY,nM,clampDay(nY,nM,startDay-1),23,59,59);
+    return txs.filter(t=>{const d=new Date(t.date);return d>=ps&&d<=pe&&t.type===type;}).reduce((s,t)=>s+t.amount,0);
+  });
   if(bC)bC.destroy();
   bC=new Chart(document.getElementById('barC'),{type:'bar',data:{labels:MONTHS,datasets:[{label:'収入',data:mk('income'),backgroundColor:'#34d399',borderRadius:4},{label:'支出',data:mk('expense'),backgroundColor:'#fda4af',borderRadius:4},{label:'投資',data:mk('investment'),backgroundColor:'#a5b4fc',borderRadius:4}]},options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#9ca3af',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#9ca3af',font:{size:9},callback:v=>v>=10000?`${v/10000}万`:v},grid:{color:'#f3f4f6'}}}}});
 }
@@ -718,6 +792,9 @@ function updateFundPrice(id){
 function deletePort(id){
   confirmDelete(id,'port');
 }
+function doDeletePort(id){
+  ports=ports.filter(p=>p.id!==id);savePorts();renderPort();
+}
 function renderPort(){
   const totalNow=ports.reduce((s,p)=>s+p.now,0);
   const totalCost=ports.reduce((s,p)=>s+(p.type==='us'?p.buy*p.qty:p.cost),0);
@@ -768,12 +845,21 @@ function renderCalYear(){
   document.getElementById('cal-month-view').classList.add('hidden');
   const today=new Date();
   document.getElementById('cal-year-grid').innerHTML=MONTHS.map((m,i)=>{
-    const mTxs=txs.filter(t=>{const d=new Date(t.date);return d.getFullYear()===calY&&d.getMonth()===i;});
+    let mTxs,isCur,cardName;
+    if(startDay===1){
+      mTxs=txs.filter(t=>{const d=new Date(t.date);return d.getFullYear()===calY&&d.getMonth()===i;});
+      isCur=today.getFullYear()===calY&&today.getMonth()===i;cardName=m;
+    }else{
+      const nM=i===11?0:i+1,nY=i===11?calY+1:calY;
+      const aSD=clampDay(calY,i,startDay),aED=clampDay(nY,nM,startDay-1);
+      const ps=new Date(calY,i,aSD),pe=new Date(nY,nM,aED,23,59,59);
+      mTxs=txs.filter(t=>{const d=new Date(t.date);return d>=ps&&d<=pe;});
+      isCur=today>=ps&&today<=pe;cardName=`${i+1}/${aSD}〜`;
+    }
     const exp=mTxs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
     const inc=mTxs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
-    const isCur=today.getFullYear()===calY&&today.getMonth()===i;
     return `<div class="cal-month-card${isCur?' cur-month':''}" onclick="selectCalMonth(${i})">
-      <div class="cal-month-card-name">${m}</div>
+      <div class="cal-month-card-name">${cardName}</div>
       ${inc>0?`<div class="cal-month-card-inc">+${inc>=10000?(inc/10000).toFixed(1)+'万':inc.toLocaleString()}</div>`:''}
       ${exp>0?`<div class="cal-month-card-exp">-${exp>=10000?(exp/10000).toFixed(1)+'万':exp.toLocaleString()}</div>`:''}
       ${inc===0&&exp===0?`<div class="cal-month-card-empty">—</div>`:''}
@@ -790,27 +876,51 @@ function renderCalMonth(){
   document.getElementById('cal-month-bar').classList.remove('hidden');
   document.getElementById('cal-year-view').classList.add('hidden');
   document.getElementById('cal-month-view').classList.remove('hidden');
-  document.getElementById('cal-title').textContent=MONTHS[calM];
-  const lastDay=new Date(calY,calM+1,0).getDate();const startDow=new Date(calY,calM,1).getDay();
-  const today=new Date();const dm={};
-  txs.forEach(t=>{const d=new Date(t.date);if(d.getFullYear()===calY&&d.getMonth()===calM){const k=d.getDate();if(!dm[k])dm[k]={exp:0,inc:0};if(t.type==='income')dm[k].inc+=t.amount;else dm[k].exp+=t.amount;}});
-  let h=DOWS.map(d=>`<div class="cal-dow">${d}</div>`).join('');
-  for(let i=0;i<startDow;i++)h+=`<div class="cal-day empty"></div>`;
-  for(let d=1;d<=lastDay;d++){
-    const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isTod=today.getFullYear()===calY&&today.getMonth()===calM&&today.getDate()===d;
-    const isSel=selDate===ds;const data=dm[d];
-    h+=`<div class="cal-day${isTod?' today':''}${isSel?' selected':''}" onclick="selCalDay('${ds}')">
-      <div class="cal-day-num">${d}</div>
-      ${data&&data.exp>0?`<div class="cal-exp">-${data.exp>=10000?(data.exp/10000).toFixed(1)+'万':data.exp.toLocaleString()}</div>`:''}
-      ${data&&data.inc>0?`<div class="cal-inc">+${data.inc>=10000?(data.inc/10000).toFixed(1)+'万':data.inc.toLocaleString()}</div>`:''}
-    </div>`;
+  const today=new Date();let h=DOWS.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  if(startDay===1){
+    document.getElementById('cal-title').textContent=MONTHS[calM];
+    const lastDay=new Date(calY,calM+1,0).getDate();const firstDow=new Date(calY,calM,1).getDay();
+    const dm={};
+    txs.forEach(t=>{const d=new Date(t.date);if(d.getFullYear()===calY&&d.getMonth()===calM){const k=d.getDate();if(!dm[k])dm[k]={exp:0,inc:0};if(t.type==='income')dm[k].inc+=t.amount;else dm[k].exp+=t.amount;}});
+    for(let i=0;i<firstDow;i++)h+=`<div class="cal-day empty"></div>`;
+    for(let d=1;d<=lastDay;d++){
+      const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const isTod=today.getFullYear()===calY&&today.getMonth()===calM&&today.getDate()===d;
+      const isSel=selDate===ds;const data=dm[d];
+      h+=`<div class="cal-day${isTod?' today':''}${isSel?' selected':''}" onclick="selCalDay('${ds}')">
+        <div class="cal-day-num">${d}</div>
+        ${data&&data.exp>0?`<div class="cal-exp">-${data.exp>=10000?(data.exp/10000).toFixed(1)+'万':data.exp.toLocaleString()}</div>`:''}
+        ${data&&data.inc>0?`<div class="cal-inc">+${data.inc>=10000?(data.inc/10000).toFixed(1)+'万':data.inc.toLocaleString()}</div>`:''}
+      </div>`;
+    }
+  }else{
+    const nM=calM===11?0:calM+1,nY=calM===11?calY+1:calY;
+    const aSD=clampDay(calY,calM,startDay),aED=clampDay(nY,nM,startDay-1);
+    const pStart=new Date(calY,calM,aSD),pEnd=new Date(nY,nM,aED);
+    document.getElementById('cal-title').textContent=`${calM+1}月${aSD}日〜${nM+1}月${aED}日`;
+    const days=[];const cur=new Date(pStart);while(cur<=pEnd){days.push(new Date(cur));cur.setDate(cur.getDate()+1);}
+    const dm={};
+    txs.forEach(t=>{const d=new Date(t.date);if(d>=pStart&&d<=pEnd){if(!dm[t.date])dm[t.date]={exp:0,inc:0};if(t.type==='income')dm[t.date].inc+=t.amount;else dm[t.date].exp+=t.amount;}});
+    const firstDow=pStart.getDay();
+    for(let i=0;i<firstDow;i++)h+=`<div class="cal-day empty"></div>`;
+    days.forEach(day=>{
+      const ds=`${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,'0')}-${String(day.getDate()).padStart(2,'0')}`;
+      const isTod=today.toDateString()===day.toDateString();
+      const isSel=selDate===ds;const data=dm[ds];
+      const numLabel=day.getDate()===1?`${day.getDate()}<span style="font-size:8px;color:#c084fc;margin-left:1px">${day.getMonth()+1}月</span>`:`${day.getDate()}`;
+      h+=`<div class="cal-day${isTod?' today':''}${isSel?' selected':''}" onclick="selCalDay('${ds}')">
+        <div class="cal-day-num">${numLabel}</div>
+        ${data&&data.exp>0?`<div class="cal-exp">-${data.exp>=10000?(data.exp/10000).toFixed(1)+'万':data.exp.toLocaleString()}</div>`:''}
+        ${data&&data.inc>0?`<div class="cal-inc">+${data.inc>=10000?(data.inc/10000).toFixed(1)+'万':data.inc.toLocaleString()}</div>`:''}
+      </div>`;
+    });
   }
   document.getElementById('cal-grid').innerHTML=h;
   if(selDate)renderCalDetail(selDate);
 }
 function selCalDay(ds){selDate=ds;calEditingId=null;renderCalMonth();}
 
+// カレンダー詳細（鉛筆ボタン付き）
 function renderCalDetail(date){
   const items=txs.filter(t=>t.date===date);
   const d=new Date(date);const label=`${d.getMonth()+1}月${d.getDate()}日（${DOWS[d.getDay()]}）`;
@@ -842,6 +952,7 @@ function renderCalDetail(date){
       </div>`;
     }).join('')}
   </div>`;
+  // 編集中のタイプボタン色を適用
   if(calEditingId){
     const tx=txs.find(t=>t.id===calEditingId);
     if(tx){
@@ -902,7 +1013,7 @@ function exportJSON(){
 function exportCSV(){
   const rows=[['日付','種別','カテゴリ','金額','メモ']];
   txs.sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{const cat=getCat(t.category);rows.push([t.date,TM[t.type].label,cat.label,t.amount,t.note||'']);});
-  const bom='\uFEFF';
+  const bom='﻿';
   const csv=bom+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
@@ -935,7 +1046,7 @@ function importJSON(text){
 }
 function importCSV(text){
   try{
-    const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
+    const lines=text.replace(/^﻿/,'').split(/\r?\n/).filter(l=>l.trim());
     const typeMap={'収入':'income','支出':'expense','投資':'investment'};let added=0;
     lines.slice(1).forEach(line=>{
       const cols=line.match(/("(?:[^"]|"")*"|[^,]*)/g).map(v=>v.replace(/^"|"$/g,'').replace(/""/g,'"'));
@@ -949,10 +1060,28 @@ function importCSV(text){
   }catch(e){toast('CSVの読み込みに失敗しました','#f43f5e');}
 }
 
+// doConfirmedDelete のポート対応
+const _origDoConfirmedDelete=doConfirmedDelete;
+function doConfirmedDelete(){
+  if(pendingDeleteCtx==='port'){
+    const id=pendingDeleteId;closeConfirm();
+    ports=ports.filter(p=>p.id!==id);savePorts();renderPort();return;
+  }
+  if(!pendingDeleteId)return;
+  const id=pendingDeleteId,ctx=pendingDeleteCtx;closeConfirm();
+  txs=txs.filter(t=>t.id!==id);save();
+  if(calEditingId===id)calEditingId=null;
+  renderDash();
+  if(ctx==='calendar')renderCalMonth();
+}
+
 // INIT
-load();setType('expense');setPortAddType('us');
+load();
+// startDay に合わせて初期期間を設定
+(()=>{const now=new Date();if(startDay===1){fM=now.getMonth();fY=now.getFullYear();}else if(now.getDate()>=startDay){fM=now.getMonth();fY=now.getFullYear();}else{fM=now.getMonth()===0?11:now.getMonth()-1;fY=now.getMonth()===0?now.getFullYear()-1:now.getFullYear();}})();
+setType('expense');setPortAddType('us');
 document.getElementById('form-date').value=new Date().toISOString().slice(0,10);
-renderDash();
+updateMenuStartDayDesc();renderDash();
 </script>
 </body>
 </html>
