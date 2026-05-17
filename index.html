@@ -442,7 +442,6 @@ body{background:#faf8ff;color:#3d2c6b;font-family:'Hiragino Sans','Noto Sans JP'
       <div class="field"><label>メモ</label><input type="text" id="sav-note" placeholder="任意"></div>
       <button class="add-btn" onclick="addSaving()">記録する</button>
     </div>
-    <div id="sav-list" style="margin-top:12px"></div>
   </div>
 
   <!-- EXPORT/IMPORT -->
@@ -608,7 +607,6 @@ function showTab(tab){
   if(tab==='add')renderCatUI();
   if(tab==='menu')updateMenuStartDayDesc();
   if(tab==='startday')renderStartDaySetting();
-  if(tab==='savings')renderSavings();
 }
 
 // ── 削除確認 ──
@@ -931,16 +929,15 @@ function addSaving(){
   const note=document.getElementById('sav-note').value;
   if(!label||!amount||!date)return;
   savings.push({id:Date.now().toString(),label,amount,date,note});
-  saveSavings();renderSavings();
+  saveSavings();
   document.getElementById('sav-amount').value='';document.getElementById('sav-note').value='';
   toast('記録しました','#10b981');
 }
 function deleteSaving(id){
-  savings=savings.filter(s=>s.id!==id);saveSavings();renderSavings();toast('削除しました','#f43f5e');
+  savings=savings.filter(s=>s.id!==id);saveSavings();toast('削除しました','#f43f5e');
 }
 function renderSavings(){
-  const el=document.getElementById('sav-list');if(!el)return;
-  if(!savings.length){el.innerHTML='<div class="empty">記録がありません</div>';return;}
+  // 一覧表示なし（年間サマリーのみで確認）
   const sorted=[...savings].sort((a,b)=>b.date.localeCompare(a.date));
   el.innerHTML=sorted.map(s=>`<div class="cal-tx" style="margin-bottom:8px">
     <div>
